@@ -12,16 +12,21 @@ htmlcov/
 !.env.example
 
 # Local application data
-data/processed/
-data/vector_store/
-data/raw_documents/private/
-logs/
+data/processed/*
+!data/processed/.gitkeep
+data/vector_store/*
+!data/vector_store/.gitkeep
+data/raw_documents/private/*
+!data/raw_documents/private/.gitkeep
+logs/*
+!logs/.gitkeep
 *.sqlite
 *.sqlite3
 *.db
 
 # Raw evaluation traces (may contain personal data)
-evaluation/results/raw/
+evaluation/results/raw/*
+!evaluation/results/raw/.gitkeep
 
 # Editor and OS
 .vscode/
