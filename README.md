@@ -162,3 +162,15 @@ The milestone's local Qwen3 smoke checks covered the exam-duration question and
 the mixed makeup-policy/email request. These are smoke checks, not an accuracy
 evaluation or Windows memory benchmark. Current policy applicability and OCR review
 warnings remain visible. Llama comparison and full evaluation are subsequent work.
+
+
+## Benchmarking
+
+The fixed 30-question evaluation dataset, source-pinned ground truth, sequential
+model comparison and manual grading workflow are documented in
+[evaluation/README.md](evaluation/README.md). Missing official data requirements
+are tracked in [evaluation/DATA_REQUIREMENTS.md](evaluation/DATA_REQUIREMENTS.md).
+
+Quick checks: `python -m evaluation.evaluate validate` and
+`python -m evaluation.compare_models --check`. Experiments retain failed answers;
+manual policy accuracy remains pending until independently graded.
