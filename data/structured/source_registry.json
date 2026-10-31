@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "coverage": {
+    "semester": "2026-27-S1",
+    "offering_list_complete": false,
+    "timetable_complete": false,
+    "instructor_assignments_complete": false
+  },
+  "sources": {
+    "rn_teaching_2026_27": {
+      "source_url": "https://home.iitj.ac.in/~rn/teaching.html",
+      "filename": "data/raw_documents/docs/rn_teaching_2026_27.html",
+      "sha256": "5f9cb5bbefb59bc330ea59c0a871ca17708b5f995770bd474f6ae460a8d02895",
+      "source_location": "Courses Taught at IIT Jodhpur, item 1",
+      "semester": "2026-27-S1",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "rn_contact": {
+      "source_url": "https://home.iitj.ac.in/~rn/",
+      "filename": "data/raw_documents/docs/rn_contact.html",
+      "sha256": "55b60e38cb7d173a2187d084a36787774ab9d91a2fe4c7b6a9237c2e5a2e46f8",
+      "source_location": "Rajendra Nagar, contact details",
+      "semester": "",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "vimalraj_teaching_2026_27": {
+      "source_url": "https://home.iitj.ac.in/~vimalraj/",
+      "filename": "data/raw_documents/docs/vimalraj_teaching_2026_27.html",
+      "sha256": "502c1a6f8eaf83b3f7bdb31dc838de92b55f83d93fbf094dd7c463d353546bdd",
+      "source_location": "Teaching, Semester I 2026-27; About/contact",
+      "semester": "2026-27-S1",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "vimalraj_csl7560": {
+      "source_url": "https://home.iitj.ac.in/~vimalraj/courses/adsa/csl7560.html",
+      "filename": "data/raw_documents/docs/vimalraj_csl7560.html",
+      "sha256": "61500f3f0c144cdf4b169902ca4ba0b0daa545ab3c4847ab3a721f79292655c5",
+      "source_location": "Course title and Course Description",
+      "semester": "",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "hardikjain_teaching_2026_27": {
+      "source_url": "https://home.iitj.ac.in/~hardikjain/teaching.html",
+      "filename": "data/raw_documents/docs/hardikjain_teaching_2026_27.html",
+      "sha256": "a5f19927cea77a17fe09e13cfd2472aa4346fd7c557d63cc6817bdf7ed9ce771",
+      "source_location": "AY 2026-27 Semester I, CSL2010",
+      "semester": "2026-27-S1",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "hardik_contact": {
+      "source_url": "https://www.iitj.ac.in/People/Profile/ec8b858c-7122-4046-8597-5a7871a10258",
+      "filename": "data/raw_documents/docs/hardik_contact.html",
+      "sha256": "ae3bb90ddaefb352cb71ee47b23a8d75b038f3afaa1d30b93a5472c66430c1d6",
+      "source_location": "Hardik Jain, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "sidharth_teaching_2026_27": {
+      "source_url": "https://sidharthranjan.github.io/teaching.html",
+      "filename": "data/raw_documents/docs/sidharth_teaching_2026_27.html",
+      "sha256": "5da1bb4ffebbf2c0a017fd726c0fdaac3604a6be9fdb0a628132529c12967986",
+      "source_location": "Faculty Teaching, Semester I 2026-27 rows",
+      "semester": "2026-27-S1",
+      "authority": "faculty_site_linked_by_institute",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "sidharth_official_profile": {
+      "source_url": "https://iitj.ac.in/People/Profile/2aa58988-dfd1-4079-8735-6cbfd6676b84?ln=en",
+      "filename": "data/raw_documents/docs/sidharth_official_profile.html",
+      "sha256": "c2b335b669d260d0f10cc46ca7f1951b42fe35ba3188024a4e3b1ee0355fe650",
+      "source_location": "Sidharth Ranjan, contact and Web Profile link",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "gurujegan_contact": {
+      "source_url": "https://iitj.ac.in/People/Profile/09d6a999-1ee7-40b5-9205-9fab85f9ae50",
+      "filename": "data/raw_documents/docs/gurujegan_contact.html",
+      "sha256": "8804cd2910f7f70b1d6446072c0ecfb2820b83f0178657908ba9b3c3e52b3f3a",
+      "source_location": "Gurujegan Murugesan, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "deeksha_contact": {
+      "source_url": "https://iitj.ac.in/People/Profile/abbbb653-e869-4981-8fa0-ba312445b97c?ln=en",
+      "filename": "data/raw_documents/docs/deeksha_contact.html",
+      "sha256": "025e02400de7679b6b2918524563ca72fda2091706a455c9539eea10da6c8eca",
+      "source_location": "Deeksha Varshney, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    },
+    "divya_contact": {
+      "source_url": "https://iitj.ac.in/People/Profile/d789ff2f-3ed9-4c8f-9510-15fcde1599c0",
+      "filename": "data/raw_documents/docs/divya_contact.html",
+      "sha256": "a5afda2dd371a4c2389b24a6b6b28dff293c941000157ba916a86e768e693089",
+      "source_location": "Divya Saxena, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31"
+    }
+  }
+}

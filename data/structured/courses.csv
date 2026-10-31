@@ -1,0 +1,7 @@
+course_code,course_name,department,level,course_type,semester,offered,source_doc_id,source_page,additional_source_ids
+EEL7009,Applied Linear Algebra,,,,2026-27-S1,true,rn_teaching_2026_27,,
+CSL7560,Advanced Data Structures and Algorithms,Computer Science and Engineering,,Core,2026-27-S1,true,vimalraj_teaching_2026_27,,vimalraj_csl7560
+CSL2010,Introduction to Machine Learning,,,,2026-27-S1,true,hardikjain_teaching_2026_27,,
+AIL4080,Introduction to Cognitive Science (Science of Intelligence),,,,2026-27-S1,true,sidharth_teaching_2026_27,,sidharth_official_profile
+LAL6220,"Language, Society and Computation",,,,2026-27-S1,true,sidharth_teaching_2026_27,,sidharth_official_profile
+AIL7260,Foundations of Vision and Language,,,,2026-27-S1,true,sidharth_teaching_2026_27,,sidharth_official_profile
