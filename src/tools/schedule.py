@@ -80,3 +80,39 @@ def count_department_electives(department: str, level: int, semester: str) -> di
                         "" if complete else "Partial dataset: recorded matches do not establish the official total.")
     except (OSError, ValueError) as exc:
         return response("error", message=str(exc))
+
+
+def lookup_course(course: str, semester: str) -> dict:
+    """Resolve an exact recorded title/code independently of timetable availability."""
+    if not semester.strip() or not course.strip():
+        return response("ambiguous", message="Specify a course title/code and academic year and semester.")
+    try:
+        rows = [r for r in course_rows() if normalized(r["semester"]) == normalized(semester)
+                and normalized(course) in {normalized(r["course_code"]), normalized(r["course_name"])}]
+        codes = {r["course_code"].upper() for r in rows}
+        if len(codes) > 1:
+            return response("ambiguous", message="Several course codes match; specify the course code.")
+        if not rows:
+            return response("not_found", message="No recorded course matches this title/code and semester.")
+        return response("success", {"course_code": rows[0]["course_code"],
+                                    "course_name": rows[0]["course_name"], "semester": semester,
+                                    "records": rows}, sources(rows))
+    except (OSError, ValueError) as exc:
+        return response("error", message=str(exc))
+
+
+def get_semester_offerings(semester: str, department: str = "") -> dict:
+    """List recorded offered courses; never imply the dataset is complete."""
+    if not semester.strip():
+        return response("ambiguous", message="Which academic year and semester?")
+    try:
+        rows = [r for r in course_rows() if normalized(r["semester"]) == normalized(semester)
+                and normalized(r["offered"]) in {"true", "yes", "1"}
+                and (not department or normalized(r["department"]) == normalized(department))]
+        if not rows:
+            return response("not_found", message="No matching recorded offerings; an official empty list is not established.")
+        complete = coverage_metadata(semester).get("offering_list_complete") is True
+        return response("success", {"semester": semester, "department": department,
+                                    "courses": rows, "coverage_verified": complete}, sources(rows))
+    except (OSError, ValueError) as exc:
+        return response("error", message=str(exc))

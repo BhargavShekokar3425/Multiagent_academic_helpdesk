@@ -14,7 +14,7 @@ from google.adk.sessions import InMemorySessionService
 from google.adk.tools.tool_context import ToolContext
 from google.genai import types
 
-from .config import build_llm
+from .config import build_llm, helpdesk_agent_mode
 from .tools.rag import search_policy
 from .validation.citations import ABSTENTION, validate_policy_output
 from .validation.support import verify_claim_support
@@ -112,7 +112,7 @@ If unable to answer, return one of:
 """
 
 
-def reset_turn(callback_context: CallbackContext):
+def reset_turn(callback_context: CallbackContext, *, route_slots=True):
     callback_context.state[EVIDENCE_KEY] = {}
     callback_context.state[RESULT_KEY] = None
     callback_context.state[REVISION_KEY] = False
@@ -133,7 +133,7 @@ def reset_turn(callback_context: CallbackContext):
     # Route direct slot questions before the LLM can substitute a policy lookup.
     # CLI context is separate from the student's actual question.
     actual_question = question.split("\nQuestion: ", 1)[-1]
-    course = parse_slot_question(actual_question)
+    course = parse_slot_question(actual_question) if route_slots else None
     if course:
         semester = callback_context.state.get("requested_semester", "")
         returned = course_slot(course, semester, callback_context)
@@ -348,7 +348,7 @@ def build_agent(extractive=False):
 baseline_agent = build_agent()
 
 
-async def answer_policy(question, program="", admission_year=0, debug=False, extractive=False, semester=""):
+async def answer_policy(question, program="", admission_year=0, debug=False, extractive=False, semester="", mode=None):
     # The request scope survives failed callback/session state reads. It is
     # isolated per async invocation and never retained across student requests.
     with unanswered_logging_scope():
@@ -357,6 +357,7 @@ async def answer_policy(question, program="", admission_year=0, debug=False, ext
         final_text = None
         failure_context = SimpleNamespace(state={})
         try:
+            selected_mode = helpdesk_agent_mode(mode)
             service = InMemorySessionService()
             session_id = str(uuid.uuid4())
             app_name, user_id = "academic_helpdesk", "local_student"
@@ -364,7 +365,11 @@ async def answer_policy(question, program="", admission_year=0, debug=False, ext
                 app_name=app_name, user_id=user_id, session_id=session_id,
                 state={ANSWER_MODE_KEY: "extractive" if extractive else "paraphrase",
                        "requested_semester": semester})
-            selected_agent = build_agent(extractive=True) if extractive else baseline_agent
+            if selected_mode == "multi":
+                from .orchestration import build_orchestrator
+                selected_agent = build_orchestrator(extractive=extractive)
+            else:
+                selected_agent = build_agent(extractive=True) if extractive else baseline_agent
             runner = Runner(agent=selected_agent, app_name=app_name, session_service=service)
             context = json.dumps({"academic_program": program,
                                   "admission_year": admission_year, "semester": semester})
@@ -414,6 +419,8 @@ async def answer_policy(question, program="", admission_year=0, debug=False, ext
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--query", required=True)
+    parser.add_argument("--mode", choices=("single", "multi"),
+                        help="Architecture; otherwise use HELPDESK_AGENT_MODE (default single)")
     parser.add_argument("--program", default="")
     parser.add_argument("--admission-year", type=int, default=0)
     parser.add_argument("--semester", default="", help="Explicit academic year and semester")
@@ -422,7 +429,7 @@ def main():
     parser.add_argument("--extractive", action="store_true",
                         help="Return cited verbatim source sentences instead of paraphrasing")
     args = parser.parse_args()
-    result = asyncio.run(answer_policy(args.query, args.program, args.admission_year, args.debug, args.extractive, args.semester))
+    result = asyncio.run(answer_policy(args.query, args.program, args.admission_year, args.debug, args.extractive, args.semester, args.mode))
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 1 if result["status"] == "error" else 0
 

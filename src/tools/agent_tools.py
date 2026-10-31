@@ -45,7 +45,19 @@ def email_draft(course_code: str, semester: str, request_type: str,
     """Draft sick_leave or makeup_exam email, using placeholders for missing details."""
     return remember(tool_context, "email_draft", email.generate_email_draft(
         course_code, semester, request_type, student_name, roll_number,
-        start_date, end_date, reason))
+        start_date, end_date, reason,
+        allow_placeholders=bool(tool_context.state.get("temp:allow_email_placeholders", False))))
+
+
+def course_lookup(course: str, semester: str, tool_context: ToolContext) -> dict:
+    """Resolve a recorded course code/title in an explicitly specified semester."""
+    return remember(tool_context, "course_lookup", schedule.lookup_course(course, semester))
+
+
+def semester_offerings(semester: str, tool_context: ToolContext, department: str = "") -> dict:
+    """List recorded semester offerings with an explicit completeness flag."""
+    return remember(tool_context, "semester_offerings",
+                    schedule.get_semester_offerings(semester, department))
 
 
 def render_result(result_id, stored):
@@ -78,11 +90,19 @@ def render_result(result_id, stored):
         answer += ", ".join(data["course_codes"])
         if data.get("coverage_verified") is not True:
             answer += "\nThe dataset is partial; the official total is not established."
+    elif name == "course_lookup":
+        answer = f"{data['course_code']} — {data['course_name']} ({data['semester']})"
+    elif name == "semester_offerings":
+        answer = "\n".join(f"{r['course_code']} — {r['course_name']}" for r in data["courses"])
+        if data.get("coverage_verified") is not True:
+            answer += "\nRecorded offerings only; the complete offering list is not established."
     elif name == "instructor":
         answer = "\n".join(f"{r['instructor_name']} — {r['email']}" for r in data["instructors"])
     else:
         answer = ("To: " + ", ".join(data["to"]) + "\nSubject: " + data["subject"]
                   + "\n\n" + data["body"] + "\n\nDraft only. Review before use.")
+        if data.get("missing_fields"):
+            answer += "\nMissing course/semester details: instructor mapping is unverified; complete the placeholders."
     refs = list(dict.fromkeys(
         f"{e['document_id']}, source p. {e['page']}" if e.get("page") else
         f"[{e['document_id']} — {e['source_location']}]({e['source_url']})"

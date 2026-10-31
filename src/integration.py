@@ -10,7 +10,10 @@ _request_log = ContextVar("academic_helpdesk_request_log", default=None)
 
 
 @contextmanager
-def unanswered_logging_scope():
+def unanswered_logging_scope(reuse_existing=False):
+    if reuse_existing and _request_log.get() is not None:
+        yield
+        return
     token = _request_log.set({})
     try:
         yield
@@ -26,7 +29,7 @@ def obvious_out_of_scope(question):
 
 
 def record_unanswered(context, result, question):
-    if result.get("status") not in {"out_of_scope", "insufficient_evidence", "error"} or not question.strip():
+    if result.get("status") not in {"out_of_scope", "insufficient_evidence", "error", "partial_answer"} or not question.strip():
         return result
     scope = _request_log.get()
     logged = context.state.get("temp:unanswered_log")

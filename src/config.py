@@ -19,3 +19,13 @@ def build_llm():
         max_tokens=2400,
         reasoning_effort="none",
     )
+
+
+def helpdesk_agent_mode(mode=None):
+    """Select architecture without changing the model or retrieval settings."""
+    load_dotenv(ROOT / ".env")
+    selected = mode if mode is not None else os.getenv("HELPDESK_AGENT_MODE", "single")
+    selected = selected.strip().lower()
+    if selected not in {"single", "multi"}:
+        raise ValueError("HELPDESK_AGENT_MODE must be single or multi")
+    return selected

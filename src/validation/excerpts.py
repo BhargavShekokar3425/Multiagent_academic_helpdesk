@@ -11,8 +11,9 @@ def excerpt_catalog(evidence):
     result = []
     for source in evidence:
         text = normalized(source["text"])
-        # Sentence punctuation followed by whitespace; decimal points stay intact.
-        for match in re.finditer(r".+?(?:[.!?](?=\s|$)|$)", text, re.S):
+        # Decimal points and the source's "illness etc. may be permitted"
+        # abbreviation must not truncate a condition before its permission clause.
+        for match in re.finditer(r".+?(?:(?<!etc)[.!?](?=\s|$)|$)", text, re.S):
             start = match.start()
             segment = match.group()
             revised = list(re.finditer(r"\brevised\s+policy\s*:\s*", segment, re.I))
