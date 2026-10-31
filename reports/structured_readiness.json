@@ -1,0 +1,90 @@
+{
+  "semester": "2026-27-S1",
+  "datasets": {
+    "courses": {
+      "rows": 6,
+      "semesters": [
+        "2026-27-S1"
+      ],
+      "unknown_source_ids": [],
+      "needs_data": false
+    },
+    "timetable": {
+      "rows": 0,
+      "semesters": [],
+      "unknown_source_ids": [],
+      "needs_data": true
+    },
+    "faculty": {
+      "rows": 9,
+      "semesters": [
+        "2026-27-S1"
+      ],
+      "unknown_source_ids": [],
+      "needs_data": false
+    }
+  },
+  "structurally_valid": true,
+  "join_and_field_issues": [],
+  "coverage": {
+    "offering_list_complete": false,
+    "timetable_complete": false,
+    "instructor_assignments_complete": false
+  },
+  "courses_missing_count_metadata": [
+    {
+      "course_code": "EEL7009",
+      "semester": "2026-27-S1",
+      "fields": [
+        "department",
+        "level",
+        "course_type"
+      ]
+    },
+    {
+      "course_code": "CSL7560",
+      "semester": "2026-27-S1",
+      "fields": [
+        "level"
+      ]
+    },
+    {
+      "course_code": "CSL2010",
+      "semester": "2026-27-S1",
+      "fields": [
+        "department",
+        "level",
+        "course_type"
+      ]
+    },
+    {
+      "course_code": "AIL4080",
+      "semester": "2026-27-S1",
+      "fields": [
+        "department",
+        "level",
+        "course_type"
+      ]
+    },
+    {
+      "course_code": "LAL6220",
+      "semester": "2026-27-S1",
+      "fields": [
+        "department",
+        "level",
+        "course_type"
+      ]
+    },
+    {
+      "course_code": "AIL7260",
+      "semester": "2026-27-S1",
+      "fields": [
+        "department",
+        "level",
+        "course_type"
+      ]
+    }
+  ],
+  "ready": false,
+  "notice": "Source integrity and valid joins do not prove policy applicability. Full readiness also requires explicitly checked dataset coverage."
+}

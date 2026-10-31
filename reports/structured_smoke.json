@@ -1,0 +1,219 @@
+{
+  "semester": "2026-27-S1",
+  "checks_passed": true,
+  "full_dataset_ready": false,
+  "live_model_called": false,
+  "email_sent": false,
+  "checks": [
+    {
+      "check": "structured_integrity",
+      "passed": true,
+      "details": {
+        "semester": "2026-27-S1",
+        "datasets": {
+          "courses": {
+            "rows": 6,
+            "semesters": [
+              "2026-27-S1"
+            ],
+            "unknown_source_ids": [],
+            "needs_data": false
+          },
+          "timetable": {
+            "rows": 0,
+            "semesters": [],
+            "unknown_source_ids": [],
+            "needs_data": true
+          },
+          "faculty": {
+            "rows": 9,
+            "semesters": [
+              "2026-27-S1"
+            ],
+            "unknown_source_ids": [],
+            "needs_data": false
+          }
+        },
+        "structurally_valid": true,
+        "join_and_field_issues": [],
+        "coverage": {
+          "offering_list_complete": false,
+          "timetable_complete": false,
+          "instructor_assignments_complete": false
+        },
+        "courses_missing_count_metadata": [
+          {
+            "course_code": "EEL7009",
+            "semester": "2026-27-S1",
+            "fields": [
+              "department",
+              "level",
+              "course_type"
+            ]
+          },
+          {
+            "course_code": "CSL7560",
+            "semester": "2026-27-S1",
+            "fields": [
+              "level"
+            ]
+          },
+          {
+            "course_code": "CSL2010",
+            "semester": "2026-27-S1",
+            "fields": [
+              "department",
+              "level",
+              "course_type"
+            ]
+          },
+          {
+            "course_code": "AIL4080",
+            "semester": "2026-27-S1",
+            "fields": [
+              "department",
+              "level",
+              "course_type"
+            ]
+          },
+          {
+            "course_code": "LAL6220",
+            "semester": "2026-27-S1",
+            "fields": [
+              "department",
+              "level",
+              "course_type"
+            ]
+          },
+          {
+            "course_code": "AIL7260",
+            "semester": "2026-27-S1",
+            "fields": [
+              "department",
+              "level",
+              "course_type"
+            ]
+          }
+        ],
+        "ready": false,
+        "notice": "Source integrity and valid joins do not prove policy applicability. Full readiness also requires explicitly checked dataset coverage."
+      }
+    },
+    {
+      "check": "target_semester_has_courses",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "EEL7009:instructor",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "EEL7009:semester_isolation",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "EEL7009:email_draft",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "CSL7560:instructor",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "CSL7560:semester_isolation",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "CSL7560:email_draft",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "CSL2010:instructor",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "CSL2010:semester_isolation",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "CSL2010:email_draft",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "AIL4080:instructor",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "AIL4080:semester_isolation",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "AIL4080:email_draft",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "LAL6220:instructor",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "LAL6220:semester_isolation",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "LAL6220:email_draft",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "AIL7260:instructor",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "AIL7260:semester_isolation",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "AIL7260:email_draft",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unknown_course_has_no_slot",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "missing_semester_requires_clarification",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unknown_assignment_has_no_recipient",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "missing_records_do_not_establish_zero",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "limitation": "Offline integration checks do not verify original-source semantics or live policy answers."
+}

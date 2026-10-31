@@ -1,0 +1,73 @@
+{
+  "semester": "2026-27-S1",
+  "live_model_called": false,
+  "email_sent": false,
+  "checks": [
+    {
+      "course_code": "EEL7009",
+      "instructor_lookup": "passed",
+      "email_draft": "passed",
+      "recipients": [
+        "rn@iitj.ac.in"
+      ],
+      "source_count": 2
+    },
+    {
+      "course_code": "CSL7560",
+      "instructor_lookup": "passed",
+      "email_draft": "passed",
+      "recipients": [
+        "vimalraj@iitj.ac.in"
+      ],
+      "source_count": 2
+    },
+    {
+      "course_code": "CSL2010",
+      "instructor_lookup": "passed",
+      "email_draft": "passed",
+      "recipients": [
+        "hardik.jain@iitj.ac.in"
+      ],
+      "source_count": 2
+    },
+    {
+      "course_code": "AIL4080",
+      "instructor_lookup": "passed",
+      "email_draft": "passed",
+      "recipients": [
+        "sranjan@iitj.ac.in"
+      ],
+      "source_count": 2
+    },
+    {
+      "course_code": "LAL6220",
+      "instructor_lookup": "passed",
+      "email_draft": "passed",
+      "recipients": [
+        "sranjan@iitj.ac.in",
+        "gurujeganm@iitj.ac.in"
+      ],
+      "source_count": 3
+    },
+    {
+      "course_code": "AIL7260",
+      "instructor_lookup": "passed",
+      "email_draft": "passed",
+      "recipients": [
+        "sranjan@iitj.ac.in",
+        "deeksha@iitj.ac.in",
+        "divyasaxena@iitj.ac.in"
+      ],
+      "source_count": 4
+    }
+  ],
+  "negative_checks": {
+    "wrong_semester": "not_found",
+    "autonomous_systems_slot": "not_found",
+    "known_course_missing_slot": "not_found",
+    "missing_semester": "ambiguous",
+    "unestablished_elective_count": "not_found"
+  },
+  "ready_for_complete_helpdesk": false,
+  "remaining": "Verified timetable and complete departmental offering list"
+}

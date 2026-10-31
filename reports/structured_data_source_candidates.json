@@ -1,0 +1,170 @@
+{
+  "checked_on": "2026-10-31",
+  "semester": "2026-27-S1",
+  "status": "partial_records_imported",
+  "ready_for_complete_helpdesk": false,
+  "complete_offering_list_found": false,
+  "verified_timetable_found": false,
+  "courses": [
+    {
+      "course_code": "EEL7009",
+      "course_name": "Applied Linear Algebra",
+      "department": "",
+      "level": "",
+      "course_type": "",
+      "semester": "2026-27-S1",
+      "offered": "true",
+      "source_doc_id": "rn_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": ""
+    },
+    {
+      "course_code": "CSL7560",
+      "course_name": "Advanced Data Structures and Algorithms",
+      "department": "Computer Science and Engineering",
+      "level": "",
+      "course_type": "Core",
+      "semester": "2026-27-S1",
+      "offered": "true",
+      "source_doc_id": "vimalraj_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "vimalraj_csl7560"
+    },
+    {
+      "course_code": "CSL2010",
+      "course_name": "Introduction to Machine Learning",
+      "department": "",
+      "level": "",
+      "course_type": "",
+      "semester": "2026-27-S1",
+      "offered": "true",
+      "source_doc_id": "hardikjain_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": ""
+    },
+    {
+      "course_code": "AIL4080",
+      "course_name": "Introduction to Cognitive Science (Science of Intelligence)",
+      "department": "",
+      "level": "",
+      "course_type": "",
+      "semester": "2026-27-S1",
+      "offered": "true",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "sidharth_official_profile"
+    },
+    {
+      "course_code": "LAL6220",
+      "course_name": "Language, Society and Computation",
+      "department": "",
+      "level": "",
+      "course_type": "",
+      "semester": "2026-27-S1",
+      "offered": "true",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "sidharth_official_profile"
+    },
+    {
+      "course_code": "AIL7260",
+      "course_name": "Foundations of Vision and Language",
+      "department": "",
+      "level": "",
+      "course_type": "",
+      "semester": "2026-27-S1",
+      "offered": "true",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "sidharth_official_profile"
+    }
+  ],
+  "instructor_assignments": [
+    {
+      "course_code": "EEL7009",
+      "semester": "2026-27-S1",
+      "instructor_name": "Rajendra Nagar",
+      "email": "rn@iitj.ac.in",
+      "source_doc_id": "rn_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "rn_contact"
+    },
+    {
+      "course_code": "CSL7560",
+      "semester": "2026-27-S1",
+      "instructor_name": "Vimal Raj Sharma",
+      "email": "vimalraj@iitj.ac.in",
+      "source_doc_id": "vimalraj_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "vimalraj_csl7560"
+    },
+    {
+      "course_code": "CSL2010",
+      "semester": "2026-27-S1",
+      "instructor_name": "Hardik Jain",
+      "email": "hardik.jain@iitj.ac.in",
+      "source_doc_id": "hardikjain_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "hardik_contact"
+    },
+    {
+      "course_code": "AIL4080",
+      "semester": "2026-27-S1",
+      "instructor_name": "Sidharth Ranjan",
+      "email": "sranjan@iitj.ac.in",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "sidharth_official_profile"
+    },
+    {
+      "course_code": "LAL6220",
+      "semester": "2026-27-S1",
+      "instructor_name": "Sidharth Ranjan",
+      "email": "sranjan@iitj.ac.in",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "sidharth_official_profile"
+    },
+    {
+      "course_code": "LAL6220",
+      "semester": "2026-27-S1",
+      "instructor_name": "Gurujegan Murugesan",
+      "email": "gurujeganm@iitj.ac.in",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "gurujegan_contact;sidharth_official_profile"
+    },
+    {
+      "course_code": "AIL7260",
+      "semester": "2026-27-S1",
+      "instructor_name": "Sidharth Ranjan",
+      "email": "sranjan@iitj.ac.in",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "sidharth_official_profile"
+    },
+    {
+      "course_code": "AIL7260",
+      "semester": "2026-27-S1",
+      "instructor_name": "Deeksha Varshney",
+      "email": "deeksha@iitj.ac.in",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "deeksha_contact;sidharth_official_profile"
+    },
+    {
+      "course_code": "AIL7260",
+      "semester": "2026-27-S1",
+      "instructor_name": "Divya Saxena",
+      "email": "divyasaxena@iitj.ac.in",
+      "source_doc_id": "sidharth_teaching_2026_27",
+      "source_page": "",
+      "additional_source_ids": "divya_contact;sidharth_official_profile"
+    }
+  ],
+  "remaining": [
+    "Verified course/section/slot timetable",
+    "Complete departmental offering list for exact elective counts"
+  ],
+  "source_registry": "data/structured/source_registry.json"
+}

@@ -1,0 +1,161 @@
+{
+  "checked_on": "2026-10-31",
+  "sources": [
+    {
+      "source_id": "rn_teaching_2026_27",
+      "url": "https://home.iitj.ac.in/~rn/teaching.html",
+      "final_url": "https://home.iitj.ac.in/~rn/teaching.html",
+      "file": "data/raw_documents/docs/rn_teaching_2026_27.html",
+      "sha256": "5f9cb5bbefb59bc330ea59c0a871ca17708b5f995770bd474f6ae460a8d02895",
+      "bytes": 5135,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "rn_contact",
+      "url": "https://home.iitj.ac.in/~rn/",
+      "final_url": "https://home.iitj.ac.in/~rn/",
+      "file": "data/raw_documents/docs/rn_contact.html",
+      "sha256": "55b60e38cb7d173a2187d084a36787774ab9d91a2fe4c7b6a9237c2e5a2e46f8",
+      "bytes": 4400,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "vimalraj_teaching_2026_27",
+      "url": "https://home.iitj.ac.in/~vimalraj/",
+      "final_url": "https://home.iitj.ac.in/~vimalraj/",
+      "file": "data/raw_documents/docs/vimalraj_teaching_2026_27.html",
+      "sha256": "502c1a6f8eaf83b3f7bdb31dc838de92b55f83d93fbf094dd7c463d353546bdd",
+      "bytes": 21935,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "hardikjain_teaching_2026_27",
+      "url": "https://home.iitj.ac.in/~hardikjain/teaching.html",
+      "final_url": "https://home.iitj.ac.in/~hardikjain/teaching.html",
+      "file": "data/raw_documents/docs/hardikjain_teaching_2026_27.html",
+      "sha256": "a5f19927cea77a17fe09e13cfd2472aa4346fd7c557d63cc6817bdf7ed9ce771",
+      "bytes": 8415,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "first_year_timetable_official",
+      "url": "https://www.iitj.ac.in/office-of-academics/en/first-year-class-time-table",
+      "final_url": "https://www.iitj.ac.in/office-of-academics/en/first-year-class-time-table",
+      "file": "data/raw_documents/docs/first_year_timetable_official.html",
+      "sha256": "733eb129d4a355336827ebe706b2ed19aadeaf196a18afb7c9b8fd91de9070a7",
+      "bytes": 152951,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "sidharth_official_profile",
+      "url": "https://iitj.ac.in/People/Profile/2aa58988-dfd1-4079-8735-6cbfd6676b84?ln=en",
+      "final_url": "https://iitj.ac.in/People/Profile/2aa58988-dfd1-4079-8735-6cbfd6676b84?ln=en",
+      "file": "data/raw_documents/docs/sidharth_official_profile.html",
+      "sha256": "c2b335b669d260d0f10cc46ca7f1951b42fe35ba3188024a4e3b1ee0355fe650",
+      "bytes": 41640,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "vimalraj_csl7560",
+      "url": "https://home.iitj.ac.in/~vimalraj/courses/adsa/csl7560.html",
+      "final_url": "https://home.iitj.ac.in/~vimalraj/courses/adsa/csl7560.html",
+      "file": "data/raw_documents/docs/vimalraj_csl7560.html",
+      "sha256": "61500f3f0c144cdf4b169902ca4ba0b0daa545ab3c4847ab3a721f79292655c5",
+      "bytes": 8079,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "sidharth_teaching_2026_27",
+      "url": "https://sidharthranjan.github.io/teaching.html",
+      "final_url": "https://sidharthranjan.github.io/teaching.html",
+      "file": "data/raw_documents/docs/sidharth_teaching_2026_27.html",
+      "sha256": "5da1bb4ffebbf2c0a017fd726c0fdaac3604a6be9fdb0a628132529c12967986",
+      "bytes": 12379,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "academic_office_home",
+      "url": "https://www.iitj.ac.in/office-of-academics/",
+      "final_url": "https://www.iitj.ac.in/office-of-academics/",
+      "file": "data/raw_documents/docs/academic_office_home.html",
+      "sha256": "f2a0a8d7761692ebdaf890a208ef0dbf254062b84d866f7fcd71d8b605cfd7c1",
+      "bytes": 50351,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "cse_undergraduate",
+      "url": "https://www.iitj.ac.in/computer-science-engineering/en/undergraduate-programs",
+      "final_url": "https://www.iitj.ac.in/computer-science-engineering/en/undergraduate-programs",
+      "file": "data/raw_documents/docs/cse_undergraduate.html",
+      "sha256": "29e2680825cdb4e2e164c2808df2bd3999db195bb627e6e2c0d9d4abb2e3e4fc",
+      "bytes": 44176,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "academic_legacy_home",
+      "url": "https://academics.iitj.ac.in/",
+      "status": "failed",
+      "error": "<urlopen error [Errno -2] Name or service not known>"
+    },
+    {
+      "source_id": "hardik_contact",
+      "url": "https://www.iitj.ac.in/People/Profile/ec8b858c-7122-4046-8597-5a7871a10258",
+      "final_url": "https://www.iitj.ac.in/People/Profile/ec8b858c-7122-4046-8597-5a7871a10258",
+      "file": "data/raw_documents/docs/hardik_contact.html",
+      "sha256": "ae3bb90ddaefb352cb71ee47b23a8d75b038f3afaa1d30b93a5472c66430c1d6",
+      "bytes": 40423,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "gurujegan_contact",
+      "url": "https://iitj.ac.in/People/Profile/09d6a999-1ee7-40b5-9205-9fab85f9ae50",
+      "final_url": "https://iitj.ac.in/People/Profile/09d6a999-1ee7-40b5-9205-9fab85f9ae50",
+      "file": "data/raw_documents/docs/gurujegan_contact.html",
+      "sha256": "8804cd2910f7f70b1d6446072c0ecfb2820b83f0178657908ba9b3c3e52b3f3a",
+      "bytes": 38848,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "deeksha_contact",
+      "url": "https://iitj.ac.in/People/Profile/abbbb653-e869-4981-8fa0-ba312445b97c?ln=en",
+      "final_url": "https://iitj.ac.in/People/Profile/abbbb653-e869-4981-8fa0-ba312445b97c?ln=en",
+      "file": "data/raw_documents/docs/deeksha_contact.html",
+      "sha256": "025e02400de7679b6b2918524563ca72fda2091706a455c9539eea10da6c8eca",
+      "bytes": 40568,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "divya_contact",
+      "url": "https://iitj.ac.in/People/Profile/d789ff2f-3ed9-4c8f-9510-15fcde1599c0",
+      "final_url": "https://iitj.ac.in/People/Profile/d789ff2f-3ed9-4c8f-9510-15fcde1599c0",
+      "file": "data/raw_documents/docs/divya_contact.html",
+      "sha256": "a5afda2dd371a4c2389b24a6b6b28dff293c941000157ba916a86e768e693089",
+      "bytes": 41478,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    },
+    {
+      "source_id": "hardik_sidebar",
+      "url": "https://home.iitj.ac.in/~hardikjain/assets/html/sidebar.html",
+      "final_url": "https://home.iitj.ac.in/~hardikjain/assets/html/sidebar.html",
+      "file": "data/raw_documents/docs/hardik_sidebar.html",
+      "sha256": "7c0d68da80cfbef583dd9df8ae6622a17eb8ee86b06079b49f378ddc998c2a35",
+      "bytes": 3662,
+      "status": "downloaded",
+      "transport": "HTTPS certificate verification enabled"
+    }
+  ]
+}
