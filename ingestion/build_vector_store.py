@@ -51,7 +51,7 @@ def main():
     ollama_client = ollama.Client(
         host=os.getenv("OLLAMA_API_BASE", "http://localhost:11434"), timeout=180)
     if args.query:
-        report = json.loads(report_path.read_text())
+        report = json.loads(report_path.read_text(encoding="utf-8"))
         if report["model"] != args.model:
             parser.error("Query embedding model must match the indexed model")
         current = ollama_client.show(args.model).model_dump(mode="json")
@@ -66,7 +66,7 @@ def main():
                                    include=["documents", "metadatas", "distances"])
         print(json.dumps(results, ensure_ascii=False, indent=2))
         return
-    chunks = [json.loads(line) for line in args.chunks.read_text().splitlines() if line.strip()]
+    chunks = [json.loads(line) for line in args.chunks.read_text(encoding="utf-8").splitlines() if line.strip()]
     if len({c["chunk_id"] for c in chunks}) != len(chunks):
         parser.error("Duplicate chunk IDs")
     selected = [c for c in chunks if args.include_review or not c["metadata"]["needs_review"]]
@@ -115,7 +115,7 @@ def main():
     }
     # Publish the current collection pointer only after a complete build.
     temp = report_path.with_suffix(".tmp")
-    temp.write_text(json.dumps(report, indent=2) + "\n")
+    temp.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     temp.replace(report_path)
     print(json.dumps(report, indent=2))
 

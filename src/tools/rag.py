@@ -100,7 +100,7 @@ def search_policy(query: str, academic_program: str = "",
         path = Path(os.getenv("CHROMA_PATH", "data/vector_store"))
         if not path.is_absolute():
             path = ROOT / path
-        report = json.loads((path / "index_report.json").read_text())
+        report = json.loads((path / "index_report.json").read_text(encoding="utf-8"))
         model = os.getenv("EMBED_MODEL", "nomic-embed-text")
         if model != report["model"]:
             raise ValueError("Configured embedding model differs from indexed model.")
