@@ -3,6 +3,7 @@ import argparse
 import asyncio
 import json
 import uuid
+from types import SimpleNamespace
 
 from google.adk.agents import Agent
 from google.adk.agents.callback_context import CallbackContext
@@ -24,7 +25,7 @@ from .validation.context_budget import focused_excerpts
 from .tools.agent_tools import (
     KEY as STRUCTURED_KEY, course_slot, courses_in_slot, elective_count,
     instructor, email_draft, render_result)
-from .integration import obvious_out_of_scope, record_unanswered
+from .integration import obvious_out_of_scope, record_unanswered, unanswered_logging_scope
 from .tools.routing import parse_slot_question
 
 EVIDENCE_KEY = "temp:policy_evidence"
@@ -179,12 +180,13 @@ def retrieve_policy(query: str, tool_context: ToolContext,
 
 
 async def validate_final(callback_context: CallbackContext, llm_response: LlmResponse):
-    content = llm_response.content
-    if content is None or not content.parts:
+    content = getattr(llm_response, "content", None)
+    parts = (content.parts or []) if content is not None else []
+    if any(part.function_call for part in parts):
         return None
-    if any(part.function_call for part in content.parts):
-        return None
-    raw = "".join(part.text or "" for part in content.parts if not part.thought)
+    # Missing final content follows the same validation/revision path as other
+    # malformed output; tool-call responses still pass through unchanged.
+    raw = "".join(part.text or "" for part in parts if not part.thought)
     evidence = list(callback_context.state.get(EVIDENCE_KEY, {}).values())
     user_content = getattr(callback_context, "user_content", None)
     question = "".join(part.text or "" for part in (user_content.parts or [])) if user_content else ""
@@ -216,6 +218,8 @@ async def validate_final(callback_context: CallbackContext, llm_response: LlmRes
 
     async def assess(candidate_raw, stage):
         try:
+            if not isinstance(candidate_raw, str) or not candidate_raw.strip():
+                raise ValueError("Model returned no final content.")
             available = callback_context.state.get("temp:available_excerpts")
             if available is not None and callback_context.state.get(ANSWER_MODE_KEY) == "extractive":
                 try:
@@ -223,10 +227,19 @@ async def validate_final(callback_context: CallbackContext, llm_response: LlmRes
                 except ValueError:
                     parsed = None
                 if isinstance(parsed, dict) and parsed.get("status") == "answer":
+                    claims = parsed.get("claims")
+                    if not isinstance(claims, list) or not 1 <= len(claims) <= 8:
+                        raise ValueError("Missing cited claims.")
                     allowed = {item["excerpt_id"] for item in available}
-                    for claim in parsed.get("claims", []):
-                        if isinstance(claim, dict) and "excerpt_id" in claim and claim["excerpt_id"] not in allowed:
-                            raise ValueError("Selected excerpt was not shown during this turn.")
+                    for claim in claims:
+                        if not isinstance(claim, dict):
+                            raise ValueError("Invalid claim object.")
+                        if "excerpt_id" in claim:
+                            excerpt_id = claim["excerpt_id"]
+                            if not isinstance(excerpt_id, str) or not excerpt_id.strip():
+                                raise ValueError("Excerpt identifier must be a nonempty string.")
+                            if excerpt_id not in allowed:
+                                raise ValueError("Selected excerpt was not shown during this turn.")
             validation_raw = (
                 resolve_excerpt_selection(candidate_raw, evidence)
                 if callback_context.state.get(ANSWER_MODE_KEY) == "extractive"
@@ -336,44 +349,66 @@ baseline_agent = build_agent()
 
 
 async def answer_policy(question, program="", admission_year=0, debug=False, extractive=False, semester=""):
-    service = InMemorySessionService()
-    session_id = str(uuid.uuid4())
-    app_name, user_id = "academic_helpdesk", "local_student"
-    await service.create_session(app_name=app_name, user_id=user_id, session_id=session_id,
-                                 state={ANSWER_MODE_KEY: "extractive" if extractive else "paraphrase",
-                                        "requested_semester": semester})
-    selected_agent = build_agent(extractive=True) if extractive else baseline_agent
-    runner = Runner(agent=selected_agent, app_name=app_name, session_service=service)
-    context = json.dumps({"academic_program": program, "admission_year": admission_year, "semester": semester})
-    final_text = None
-    try:
-        async for event in runner.run_async(
-            user_id=user_id, session_id=session_id,
-            new_message=types.Content(role="user", parts=[
-                types.Part(text=f"Student context: {context}\nQuestion: {question}")]),
-            run_config=RunConfig(max_llm_calls=6),
-        ):
-            if event.is_final_response() and event.content:
-                final_text = "".join(p.text or "" for p in event.content.parts)
-        session = await service.get_session(
-            app_name=app_name, user_id=user_id, session_id=session_id)
-        result = session.state.get(RESULT_KEY)
-        if not result:
-            return {"status": "error", "answer": "No validated final response was produced."}
-        result = dict(result)
-        tool_calls = result.pop("_tool_calls", [])
-        diagnostics = result.pop("_debug", None)
-        if debug:
-            result["debug"] = {
-                **(diagnostics or {}),
-                "tool_calls": tool_calls,
-            }
-        return {**result, "display_answer": final_text}
-    except Exception as exc:
-        return {"status": "error", "answer": "The policy service could not complete the request.",
-                "error": f"{type(exc).__name__}: {exc}"}
-    finally:
-        await runner.close()
+    # The request scope survives failed callback/session state reads. It is
+    # isolated per async invocation and never retained across student requests.
+    with unanswered_logging_scope():
+        runner = None
+        result = None
+        final_text = None
+        failure_context = SimpleNamespace(state={})
+        try:
+            service = InMemorySessionService()
+            session_id = str(uuid.uuid4())
+            app_name, user_id = "academic_helpdesk", "local_student"
+            await service.create_session(
+                app_name=app_name, user_id=user_id, session_id=session_id,
+                state={ANSWER_MODE_KEY: "extractive" if extractive else "paraphrase",
+                       "requested_semester": semester})
+            selected_agent = build_agent(extractive=True) if extractive else baseline_agent
+            runner = Runner(agent=selected_agent, app_name=app_name, session_service=service)
+            context = json.dumps({"academic_program": program,
+                                  "admission_year": admission_year, "semester": semester})
+            async for event in runner.run_async(
+                user_id=user_id, session_id=session_id,
+                new_message=types.Content(role="user", parts=[
+                    types.Part(text=f"Student context: {context}\nQuestion: {question}")]),
+                run_config=RunConfig(max_llm_calls=6),
+            ):
+                if event.is_final_response() and event.content:
+                    final_text = "".join(p.text or "" for p in (event.content.parts or []))
+            session = await service.get_session(
+                app_name=app_name, user_id=user_id, session_id=session_id)
+            stored = session.state.get(RESULT_KEY) if session is not None else None
+            if not stored:
+                result = {"status": "error", "answer": "No validated final response was produced.",
+                          "failure_type": "missing_final_response"}
+            else:
+                result = dict(stored)
+                tool_calls = result.pop("_tool_calls", [])
+                diagnostics = result.pop("_debug", None)
+                if debug:
+                    result["debug"] = {**(diagnostics or {}), "tool_calls": tool_calls}
+        except Exception as exc:
+            result = {"status": "error",
+                      "answer": "The policy service could not complete the request.",
+                      "failure_type": "service_error",
+                      "error": f"{type(exc).__name__}: {exc}"}
+        finally:
+            if runner is not None:
+                try:
+                    await runner.close()
+                except Exception as exc:
+                    cleanup_error = f"{type(exc).__name__}: {exc}"
+                    if result is None or result.get("status") != "error":
+                        result = {"status": "error",
+                                  "answer": "The policy service could not complete the request.",
+                                  "failure_type": "runner_cleanup_error", "error": cleanup_error}
+                    else:
+                        # Preserve the primary failure and avoid a second log entry.
+                        result["cleanup_error"] = cleanup_error
+        record_unanswered(failure_context, result, question)
+        display = final_text if final_text and result["status"] != "error" else result["answer"]
+        return {**result, "display_answer": display}
 
 
 def main():
