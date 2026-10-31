@@ -1,0 +1,746 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "iitj-helpdesk-30-v1",
+  "scope": "Fixed local source snapshot; named-document questions are not claims of latest university policy.",
+  "distribution": {
+    "policy": 10,
+    "schedule": 8,
+    "email": 5,
+    "out_of_scope": 4,
+    "unsupported": 3
+  },
+  "questions": [
+    {
+      "id": "P01",
+      "question": "According to Circular 52 dated 8 July 2024, what are the Minor and Major examination durations and the minimum Major examination weightage?",
+      "category": "policy",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "circular_52_2024"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P02",
+      "question": "According to the revised policy in Circular 51 dated 8 July 2024, what attendance is expected in each course?",
+      "category": "policy",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "circular_51_2024"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P03",
+      "question": "According to Circular 51 dated 8 July 2024, under which two conditions may an instructor recommend course de-registration?",
+      "category": "policy",
+      "difficulty": "hard",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "circular_51_2024"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P04",
+      "question": "Under Section 13.1 of the PG regulations for students enrolled from July 2022, what is the annual leave allowance and maximum leave at a stretch for Ph.D. and M.Tech./M.Sc. students?",
+      "category": "policy",
+      "difficulty": "hard",
+      "context": {
+        "program": "PG",
+        "admission_year": 2022,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P05",
+      "question": "According to Section 8 of the July 2022 PG regulations, to whom, through whom, and within how many days should a missed-examination makeup application be submitted?",
+      "category": "policy",
+      "difficulty": "medium",
+      "context": {
+        "program": "PG",
+        "admission_year": 2022,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P06",
+      "question": "Under Section 8 of the July 2022 PG regulations, is another makeup examination normally granted after missing a makeup, and what prolonged-illness exception is described?",
+      "category": "policy",
+      "difficulty": "hard",
+      "context": {
+        "program": "PG",
+        "admission_year": 2022,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P07",
+      "question": "According to Section 5.1 of the July 2022 PG regulations, what are the four special letter grades named in the prose and their meanings?",
+      "category": "policy",
+      "difficulty": "simple",
+      "context": {
+        "program": "PG",
+        "admission_year": 2022,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P08",
+      "question": "According to Table 12.8 in the July 2022 PG regulations, what minimum CGPA maintains assistantship/fellowship for M.Tech., M.Tech.-Ph.D. dual degree and Ph.D.?",
+      "category": "policy",
+      "difficulty": "hard",
+      "context": {
+        "program": "PG",
+        "admission_year": 2022,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P09",
+      "question": "According to Table 11.1 in the July 2022 PG regulations, what are the indicative maximum and minimum regular-semester registration credits for a full-time regular/sponsored M.Tech. student?",
+      "category": "policy",
+      "difficulty": "medium",
+      "context": {
+        "program": "M.Tech.",
+        "admission_year": 2022,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "P10",
+      "question": "I missed my Major exam in CSL7560 due to illness. According to Section 8 of the July 2022 PG regulations, explain the makeup application procedure and draft an email to the instructor.",
+      "category": "policy",
+      "difficulty": "hard",
+      "context": {
+        "program": "PG",
+        "admission_year": 2022,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent",
+          "email_agent"
+        ],
+        "tools": [
+          "retrieve_policy",
+          "email_draft"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022",
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "currently_answerable": true,
+      "multi_intent": true
+    },
+    {
+      "id": "S01",
+      "question": "What is the slot for Autonomous Systems?",
+      "category": "schedule",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "missing_record",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_slot"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "S02",
+      "question": "What is the slot for CSL7560?",
+      "category": "schedule",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "missing_record",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_slot"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "S03",
+      "question": "What is the slot for Autonomous Systems?",
+      "category": "schedule",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "clarify",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_slot"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "S04",
+      "question": "Who is the instructor for CSL7560?",
+      "category": "schedule",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "instructor"
+        ]
+      },
+      "required_source_ids": [
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "S05",
+      "question": "Who are the instructors for AIL7260?",
+      "category": "schedule",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "instructor"
+        ]
+      },
+      "required_source_ids": [
+        "sidharth_teaching_2026_27",
+        "sidharth_official_profile",
+        "deeksha_contact",
+        "divya_contact"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "S06",
+      "question": "What is the course code for Advanced Data Structures and Algorithms?",
+      "category": "schedule",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_lookup"
+        ]
+      },
+      "required_source_ids": [
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "S07",
+      "question": "List the recorded course offerings for this semester, and say whether this is a complete institute-wide list.",
+      "category": "schedule",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "semester_offerings"
+        ]
+      },
+      "required_source_ids": [
+        "rn_teaching_2026_27",
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560",
+        "hardikjain_teaching_2026_27",
+        "sidharth_teaching_2026_27",
+        "sidharth_official_profile"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "S08",
+      "question": "How many Humanities 400-level elective courses are offered this semester?",
+      "category": "schedule",
+      "difficulty": "hard",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "missing_record",
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "elective_count"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "E01",
+      "question": "Draft a sick-leave email to the instructor for CSL7560.",
+      "category": "email",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "required_source_ids": [
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "E02",
+      "question": "Draft a makeup-examination permission email for EEL7009 after I missed the exam due to illness.",
+      "category": "email",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "required_source_ids": [
+        "rn_teaching_2026_27",
+        "rn_contact"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "E03",
+      "question": "Draft a sick-leave email for my course; I have not supplied the course code, instructor or semester.",
+      "category": "email",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "E04",
+      "question": "Draft a sick-leave email to the instructors for LAL6220.",
+      "category": "email",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "required_source_ids": [
+        "sidharth_teaching_2026_27",
+        "gurujegan_contact",
+        "sidharth_official_profile"
+      ],
+      "currently_answerable": true,
+      "multi_intent": false
+    },
+    {
+      "id": "E05",
+      "question": "According to Section 13.1 of the July 2022 PG regulations, explain the annual leave allowance and draft a sick-leave email for EEL7009.",
+      "category": "email",
+      "difficulty": "hard",
+      "context": {
+        "program": "PG",
+        "admission_year": 2022,
+        "semester": "2026-27-S1"
+      },
+      "expected_behavior": "answer",
+      "expected_route": {
+        "specialists": [
+          "policy_agent",
+          "email_agent"
+        ],
+        "tools": [
+          "retrieve_policy",
+          "email_draft"
+        ]
+      },
+      "required_source_ids": [
+        "pg_regulations_2022",
+        "rn_teaching_2026_27",
+        "rn_contact"
+      ],
+      "currently_answerable": true,
+      "multi_intent": true
+    },
+    {
+      "id": "O01",
+      "question": "What are the available dining options on campus?",
+      "category": "out_of_scope",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "refuse",
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "O02",
+      "question": "How do I reach the campus from the railway station?",
+      "category": "out_of_scope",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "refuse",
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "O03",
+      "question": "Which stocks should I buy this week?",
+      "category": "out_of_scope",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "refuse",
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "O04",
+      "question": "What is tomorrow's weather forecast?",
+      "category": "out_of_scope",
+      "difficulty": "simple",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "refuse",
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "U01",
+      "question": "What is my personal academic CGPA and my current class rank?",
+      "category": "unsupported",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "abstain",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "U02",
+      "question": "What is the exact Major examination date for CSL7560 in Semester I of AY 2030-31?",
+      "category": "unsupported",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": "2030-31-S1"
+      },
+      "expected_behavior": "abstain",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    },
+    {
+      "id": "U03",
+      "question": "What academic scholarship amount was deposited into my bank account this month?",
+      "category": "unsupported",
+      "difficulty": "medium",
+      "context": {
+        "program": "",
+        "admission_year": 0,
+        "semester": ""
+      },
+      "expected_behavior": "abstain",
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "required_source_ids": [],
+      "currently_answerable": false,
+      "multi_intent": false
+    }
+  ]
+}

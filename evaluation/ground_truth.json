@@ -1,0 +1,1357 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "iitj-helpdesk-30-v1",
+  "verification_method": "Original PG PDF text inspected; Circular 51 pp.1-2 and Circular 52 p.1 visually inspected; checked structured registry and saved-source hashes. No evaluated-model output used as ground truth.",
+  "review_requirement": "Independent human sign-off is recommended. Source fidelity does not establish latest applicability. OCR source flags in production remain unchanged.",
+  "rubric": {
+    "accuracy": "Binary 1 only when all required facts, scope, exceptions and requested sub-tasks are correct; otherwise 0. Policy and mixed answers require manual grading.",
+    "groundedness": "Claim-level source support. Exact complete excerpts can be checked mechanically; paraphrases need manual evidence review. Model self-review and similarity are not ground truth.",
+    "citation_correctness": "Source identity, page/location and quote fidelity; semantic relevance/completeness is graded separately."
+  },
+  "dataset_files": {
+    "data/document_manifest.csv": "a7a7abc61aae470a94234a9536bb05c6e0bc4d7eb02f45cf8ac3b2b7107763cf",
+    "data/structured/courses.csv": "ad51d80247a353da1aa8bbf1fc147f279d3c0c4478c0fec87c0cea8a3ab6dfb6",
+    "data/structured/faculty.csv": "9fde02a7067312a3495666e98dbf0a98cfe9d8e612141e0949a8c90d68737172",
+    "data/structured/timetable.csv": "f9bc153f2d9d4c4e35742c1dee66f6dc3ac48d8b0b326cf5cfa2b2b1458877eb",
+    "data/structured/source_registry.json": "b011f5d5b0a36cbcb8aa1e5db1f30f19f753735aca3a02b4b0ba9d03e437beca"
+  },
+  "sources": {
+    "pg_regulations_2022": {
+      "type": "pdf",
+      "filename": "data/raw_documents/docs/4_Regulation_PG_2022-onwards_20022023.pdf",
+      "sha256": "cfd402458b1e7c6d65e25f3686a27c95e6d2d4d52c3392c69b7507abd7e073aa",
+      "source_url": "https://iitj.ac.in/office-of-academics/en/Academic-Regulations",
+      "verification": "source_text_checked",
+      "scope": "Named document only; latest applicability is not independently verified.",
+      "pages": {
+        "10": {
+          "reference_text": "duration and the major examination of 120 minutes. Fractal courses (less than 3 credits)\n         must have at least one examination.\n    ●    The total weightage of the examination component (three examinations for a 14-week\n         long course) shall be between 40% to 60% of the total weightage of evaluation measure.\n    ●    Evaluation policy has to be known from the first day of the class.\n    ●    The continuous evaluation may include but not limited to interaction in the classroom,\n         quizzes, assignments, tutorials, laboratory work, term papers and projects.\n\n\n5. GRADING SYSTEM\n5.1 Letter Grades\nAt the end of the semester, a student is awarded a relative letter grade in each course by the\nInstructor offering the course considering the performance of the student during the semester\nwith respect to those of the other students registered in the course. It is proposed that ten\nregular letter grades, namely A*, A, A-, B, B-, C, C-, D, E and F shall be awarded in each course.\nEach letter grade is associated with a numerical equivalent on a 10-point scale shown in Table 5.1.\nIn addition, there are four special letter grades, namely, I, S, X and U, which stand for Incomplete,\nSatisfactory, Thesis Continuation and Unsatisfactory, respectively. The faculty member shall\nupload grades on the portal as per stipulated time schedule.\n\nTable 5.1 Letter grade and its equivalent grade points\n  S.N.      Letter Grade                Grade Points                Comment\n    1                   A*                          10                      Exceptional\n    2                   A                           10              Outstanding\n    3                   A-                           9              Excellent\n    4                   B                           8               Very Good\n    5                   B-                           7              Good\n   6                    C                           6               Average\n    7                   C-                           5              Below Average\n   8                    D                            4              Marginal\n    9                   E                            2              Poor\n   10                    F                          0               Fail\n   11                    I              Incomplete\n   12                   S               Satisfactory in Course\n   13                   X               Thesis Continuation\n   14                   U               Unsatisfactory\n   15                   W               Withdrawn",
+          "verification": "original_pdf_text_checked",
+          "note": "PDF page number; preserve table column/program context."
+        },
+        "13": {
+          "reference_text": "6. GRADE CARD AND TRANSCRIPT\n\nA Grade Card shall be issued to each student at the end of each semester, and a Transcript at the\n\nend of the Programme. IIT Jodhpur Grade Card and Transcript will only indicate the courses,\n\ncredits and grades completed at IIT Jodhpur and the total number of credits (without grades)\n\nearned in other academic institutions in a particular semester, if applicable.\n\n7. WAIVER OF REQUIREMENTS IN SPECIAL CASES\n\nThe rules and regulations procedures and requirements stated in this manual, other than those\n\nrelated to Admissions to the academic programmes, may be waived in special circumstances by\n\nthe AC on the recommendation of the Department with the approval of Chairman, Senate. All\n\nsuch exceptions have to be reported to the Senate.\n\n8. MAKE-UP EXAMINATIONS\n\nA student who has missed minor(s) or the major examination due to genuine reasons like illness\n\netc. may be permitted to write a make-up examination for the missed components. The student\n\nshould make an application to the Dean (Academics) through the course instructor within ten\n\ndays from the date of the missed examination, explaining the reasons for their absence.\n\nApplications received after this period need not be entertained. The permission to take a\n\nmake-up examination will be given under exceptional circumstances such as admission to a\n\nhospital due to illness. A student needs to produce the necessary document subject to one of the\n\nfollowing categories:\n\n●\nStudents residing in the Hostels should produce a Medical Certificate issued by the\n\nMedical Officer of the Institute that he/she was admitted in the Hospital during the period\n\nof the missed quiz/exam.\n\n●\nStudents residing in the Hostels and taking medical consultation with outside Doctors are\n\nrequired to obtain written permission from the Medical Officer of the Institute Hospital\n\nbefore they proceed for such consultation.\n\n●\nStudents residing in the hostels but taking medical consultation with outside Doctors are\n\nrequired to obtain an endorsement on the certificate of treatment by the Medical Officer\n\nof the Institute Hospital.\n\n●\nA student staying outside the Campus permanently / temporarily must produce a medical\n\ncertificate from the Registered Medical Practitioner and the same should be duly\n\nendorsed by the parent/guardian.",
+          "verification": "original_pdf_text_checked",
+          "note": "PDF page number; preserve table column/program context."
+        },
+        "14": {
+          "reference_text": "A slot- wise make-up examination for major will be held during the makeup /\n\nsupplementary week as per Academic Calendar of the subsequent semester for those\n\nwho are permitted to take the make-up examination. A student who misses this make-up\n\nexamination will not normally be given another make-up examination. However, in\n\nexceptional cases of prolonged illness resulting in the student missing a make-up\n\nexamination, the Chairman of the Senate, in consultation with the Dean of Academics\n\nmay permit the student to appear for make-up examination any day before the end of the\n\nfirst week of the next semester. Under no circumstances prorating can be done for the\n\nmissed examinations or attendance.",
+          "verification": "original_pdf_text_checked",
+          "note": "PDF page number; preserve table column/program context."
+        },
+        "21": {
+          "reference_text": "11. PG REGISTRATION\n11.1 Limits on Registration\nMaximum and minimum number of credits a student can register in different programs:\n   ● M.Sc.: A M.Sc. student can register for a maximum of 24 credits and a minimum of 10\n      credits in a semester.\n   ● M.Tech.: A M.Tech. student can register for maximum and minimum credits as per Table\n      11.1.\nTable 11.1 Maximum and Minimum Credits a M.Tech. student can register for during the Regular\nsemester/Summer Term :\n                    M.Tech. student registered under different        Indicative Maximum     Minimum\n                    categories                                               Credits         Credits\nRegular             Executive (Accelerated)                          24                      10\nSemester            Executive (Normal)                               17                      10\n                    Executive (Slow-Paced)                           12                      3\n                    Executive (Part Time)                            12                      3\n                    Full-time (Regular/Sponsored)                    17                      10\n                    External                                         20                      10\n                    Part-time                                        12                      3\nSummer Term         Executive (Accelerated)                          16                      0\n                    Executive (Normal)                               9                       0\n                    Executive (Slow-Paced)                           6                       0\n                    Full-time (Regular)                              9                       5\n                    Full-time (Sponsored)                            9                       0\n                    External                                         9                       0\n                    Part-time                                        6                       0\n\n\n    ●   M.Tech.-Ph.D. dual degree/Direct Ph.D. (Joining after B.Tech.) - The maximum and\n        minimum credits that a M.Tech.-Ph.D. dual degree/direct Ph.D. student can register are\n        equivalent to that of a M.Tech. (Regular/External/Part-time) student.\n    ●   Ph.D.: A Ph.D. student can register for maximum and minimum credits as per Table 11.2.\n\nTable 11.2 Maximum and Minimum Credits a Ph.D. student can register for during the Regular\nsemester\nPh.D. student       registered   under      different        Indicative       Indicative        Minimum\ncategories                                              Maximum Credits       Maximum Credits Credits\n                                                         (before qualifier)   (after qualifier)\nFull-time Regular                                       16                    16                6\nExternal                                                16                    12                6\nPart-Time                                               12                    12                3\n\n\n11.1.1 Registration Kept Alive (RKA)\nA student admitted to a M.Tech program who has at least completed minimum credit\nrequirement of the first semester, can keep his studentship alive while he is pursuing any\nprofessional activity, by opting for RKA in subsequent semesters. The candidate must indicate his\nintent of RKA before the last date of late registration through DRC to Dean (academic). The\ncandidate has to pay appropriate registration fees for RKA status.",
+          "verification": "original_pdf_text_checked",
+          "note": "PDF page number; preserve table column/program context."
+        },
+        "27": {
+          "reference_text": "12.8.4 Minimum performance for continuation Assistantship/Fellowship\nThe minimum CGPA requirement for continuation Assistantship/Fellowship is given in below\nTable 12.8\n\nTable 12.8 Minimum CGPA requirements for Continuation of Assistantship/Fellowship\nSr. No.      Program                                     Continuation of Assistantship/\n                                                         Fellowship\n1            M.Tech.                                                        6.0\n2            Dual Degree (M.Tech. and Ph.D.)                                6.5\n3            Ph.D.                                                          6.5\n\n\n13. LEAVE RULES\nApplication for leave of absence should be addressed to the Convener DRC, and submitted with a\nmedical certificate, if applicable. Usually, leave must not be availed of without prior approval of\nthe DRC.\n\n13.1 Leave\nA maximum of 30 days in an academic year (including leave on medical grounds + mid semester\nbreak). The student must apply for leave in advance even during the summer/winter term or\nmid-semester break.\nA PhD student cannot avail leave for more than 15 days at a stretch\nAn M.Tech./M.Sc. student cannot avail leave for more than 10 days at a stretch\nThe leave beyond 30 days in an Academic Year may be granted in exceptional cases by DRC\nwithout assistantship during that period.\n\n13.2 Other Leaves\nMaternity leave for Ph.D. students is sanctioned as per the directives of MoE. It will not be\ncounted towards maximum permissible duration of the programme.\nAny other leave may also be permissible as per the guidelines of MoE.\n\n13.3 Semester Withdrawal\nMay be applicable in unforeseen circumstances or for medical reasons. Absence for a period of\nfour or more weeks in any semester will result in automatic withdrawal from that semester.\nIn all such cases, the fellowship will be stopped with immediate effect and it will be continued for\nonly after the student rejoins the institute. DRC can approve and intimate Office of Academics\nregarding the leave of the student for records. In case, the leave extends beyond a semester, it\ncan only be approved through the Academic Committee. Semester withdrawal on medical\nground will not be counted towards maximum permissible duration of the programme for the\nstudent.\n\n\n13.4 Academic Leave\nAcademic leave can be requested for any of the following reasons, such as\n  1. Field work\n  2. Library work- because of a specialized collection at a particular library\n  3. Experimental work/training using specialized facility not available at IITJ\n  4. Attending conferences/workshops/summer/winter schools/symposium",
+          "verification": "original_pdf_text_checked",
+          "note": "PDF page number; preserve table column/program context."
+        }
+      },
+      "page_count": 36
+    },
+    "circular_51_2024": {
+      "type": "pdf",
+      "filename": "data/raw_documents/scanned/7.1_Circular_51Circular-No.-IITJOAACircular2024-2551682-dated-08-July-2024.pdf",
+      "sha256": "e40f988fa22187afed812fa0a25e7432b5a4d5e9c7782ef743320b1e755b9642",
+      "source_url": "https://iitj.ac.in/office-of-academics/en/Academic-Regulations",
+      "verification": "source_text_checked",
+      "scope": "Named document only; latest applicability is not independently verified.",
+      "pages": {
+        "1": {
+          "reference_text": "Cy\n\nभारतीयप्रौद्योगिकीसंस्थानजोधपुर\nIndian Institute of Technology Jodhpur\n\nNo. IITJ/OAA/Circular/ 2024-25/32-/ @2—\nDated: 08 July 2024\n\nCIRCULAR\n\nSubject: Amendment in the Attendance Policy of the Institute for the Students\n\nThe Senate in its 38th Meeting held on 26th June 2024 vide resolution number\n\n38.2.7 approved an amendment to the existing attendance Policy.\nExisting policy: As per the current policy for attendance in courses, a student\nshould have full attendance in each course. Unless the student takes a leave of absence\n\n_\nfor valid reasons, the student has to attend every lecture, tutorial, or lab session. The\nattendance records must be made available to the student after every lecture. Even if the\nstudent’s attendance falls below 75%, the student will be allowed to appear for the exams.\nStudents not meeting the attendance criterion of 75% will be required to score at least a\nC grade to pass a course. These students would be awarded anF grade if their marks are\nlower than the cut-off for a C grade in a course.\n\nRevised Policy: According to the recent Senate and Board-approved policy,\nstudents' examination performance is no longer linked to their course attendance. As per the\namendment in attendance policy a student is expected to have full attendance in each\ncourse unless the student takes a leave of absence for valid medical or bonafide reasons.\n\nIn any case, the attendance of a student should not fall below 75% in a course. The\nattendance records must be made available weekly to all students enrolled in a course by\nthe instructors/TAs. The Course Instructor/TAs must inform students about the\nattendance policy of the course at the beginning of the course in the First Course Handout\n(FCH), and\n\n> If a student remains absent from a class without sanctioned leave for more than\n\ntwo weeks, then the course instructor may recommend the de-registration of the\nstudent from the course.\n> Ifa student is found to be absent from all academic activities for four or more than\n\nfour weeks (not necessarily contiguous) in a semester, with or without sanctioned\n\nleave, then his/her registration will result in automatic semester withdrawal for\n\nall the courses.\n\nie",
+          "verification": "visually_checked_relevant_clauses",
+          "note": "OCR header/reference-number noise is not authoritative."
+        },
+        "2": {
+          "reference_text": "> If a student's attendance falls below 75% without any valid reason, the instructor\n\ncan recommend de-registration from the course to the SUGC/SPGC.\n> This policy supersedes the earlier policy in totality.\n\nfe\n१५Vane\n(५ingar\n\nAssistant Registrar (Office of Academic Affairs)\n\nCopy to for information\n\n1.\nThe Director\n\n2.\nAll Students\n\n3.\nAll Head(s)/ All Dean(s)/ Associate Dean(s)\n4.\nAll Faculty\n5.\nAll Offices of Academic Units/ Office of Student Affairs\n6.\nOffice of Academic Affairs record file",
+          "verification": "visually_checked_relevant_clauses",
+          "note": "OCR header/reference-number noise is not authoritative."
+        }
+      },
+      "page_count": 2
+    },
+    "circular_52_2024": {
+      "type": "pdf",
+      "filename": "data/raw_documents/scanned/7.2_Circular_52Circular-No.-IITJOAACircular2024-2552683-dated-08-July-2024.pdf",
+      "sha256": "05a5201b7eb14f8a59f99e5feacea12ae57a8fcd877ae6ec1d1e604cea388ca2",
+      "source_url": "https://iitj.ac.in/PageImages/Gallery/03-2025/7.2_Circular_52Circular-No.-IITJOAACircular2024-2552683-dated-08-July-2024.pdf",
+      "verification": "source_text_checked",
+      "scope": "Named document only; latest applicability is not independently verified.",
+      "pages": {
+        "1": {
+          "reference_text": "[EX\n\nभारतीयप्रौद्योगिकीसंस्थानजोधपुर\nIndian Institute of Technology Jodhpur\n\nNo. ITJ/OAA/ Circular/2024-25/42./€8 3\nDated: 08 July 2024\n\nCIRCULAR\n\nSubject: To conduct one Minor and one Major examination for evaluation in all\nAcademic Programs\n\nThe Senate in its 38th meeting held on 26th June 2024 vide resolution number 38.2.6\napproved to conduct one Minor and one Major examination for evaluation in all Academic\nPrograms.\n\nThe evaluation scheme approved by the Senate for all Academic Programs is as under:\n\n1. The Minor Examination will occur around the midpoint of the Semester to evaluate\nStudents' progress and to offer prompt feedback on their academic performance. The\nMinor examination will be a written examination for 2 hours.\n\n2. The Major Examination will take place at the end of the Semester to assess students’\nthorough grasp of the concepts taught throughout the Semester. The Major\nexamination will encompass the entire syllabus and assess learning across the entire\ncourse.\n\n3. The Major examination will be a written examination with a weightage not less than\n40% of the overall evaluation. The duration of the major examination will be 3 hours.\n4.\nThe examinations from Academic Year 2024-25 Semester ने\nonwards would be\ndecentralized where the office of Academics would provide the examination\ncalendar, venue details, and examination copies. The Faculty Members would\nconduct examinations with the support of their Teaching Assistant (TA) and prepare\nseating arrangements.\n\n5.\nInstructors\nwill determine\nthe weightage\nof Minor\nexamination and\nother\ncomponents of continuous evaluation.\n\n6.\nAll the Faculty Members shall share the course evaluation scheme with the students\nat least two days before the very first day of the Class, in the First Course Handout\n(FCH).\n\n7.\nThis policy supersedes the earlier policy regarding evaluation in totality.\n\nLy(7\nv\nRavi\nJingar\nAssistant Registrar (Office of Academic Affairs)",
+          "verification": "visually_checked_relevant_clauses",
+          "note": "OCR header/reference-number noise is not authoritative."
+        }
+      },
+      "page_count": 2
+    },
+    "rn_teaching_2026_27": {
+      "type": "html",
+      "source_url": "https://home.iitj.ac.in/~rn/teaching.html",
+      "filename": "data/raw_documents/docs/rn_teaching_2026_27.html",
+      "sha256": "5f9cb5bbefb59bc330ea59c0a871ca17708b5f995770bd474f6ae460a8d02895",
+      "source_location": "Courses Taught at IIT Jodhpur, item 1",
+      "semester": "2026-27-S1",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "rn_contact": {
+      "type": "html",
+      "source_url": "https://home.iitj.ac.in/~rn/",
+      "filename": "data/raw_documents/docs/rn_contact.html",
+      "sha256": "55b60e38cb7d173a2187d084a36787774ab9d91a2fe4c7b6a9237c2e5a2e46f8",
+      "source_location": "Rajendra Nagar, contact details",
+      "semester": "",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "vimalraj_teaching_2026_27": {
+      "type": "html",
+      "source_url": "https://home.iitj.ac.in/~vimalraj/",
+      "filename": "data/raw_documents/docs/vimalraj_teaching_2026_27.html",
+      "sha256": "502c1a6f8eaf83b3f7bdb31dc838de92b55f83d93fbf094dd7c463d353546bdd",
+      "source_location": "Teaching, Semester I 2026-27; About/contact",
+      "semester": "2026-27-S1",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "vimalraj_csl7560": {
+      "type": "html",
+      "source_url": "https://home.iitj.ac.in/~vimalraj/courses/adsa/csl7560.html",
+      "filename": "data/raw_documents/docs/vimalraj_csl7560.html",
+      "sha256": "61500f3f0c144cdf4b169902ca4ba0b0daa545ab3c4847ab3a721f79292655c5",
+      "source_location": "Course title and Course Description",
+      "semester": "",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "hardikjain_teaching_2026_27": {
+      "type": "html",
+      "source_url": "https://home.iitj.ac.in/~hardikjain/teaching.html",
+      "filename": "data/raw_documents/docs/hardikjain_teaching_2026_27.html",
+      "sha256": "a5f19927cea77a17fe09e13cfd2472aa4346fd7c557d63cc6817bdf7ed9ce771",
+      "source_location": "AY 2026-27 Semester I, CSL2010",
+      "semester": "2026-27-S1",
+      "authority": "institute_hosted_faculty",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "hardik_contact": {
+      "type": "html",
+      "source_url": "https://www.iitj.ac.in/People/Profile/ec8b858c-7122-4046-8597-5a7871a10258",
+      "filename": "data/raw_documents/docs/hardik_contact.html",
+      "sha256": "ae3bb90ddaefb352cb71ee47b23a8d75b038f3afaa1d30b93a5472c66430c1d6",
+      "source_location": "Hardik Jain, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "sidharth_teaching_2026_27": {
+      "type": "html",
+      "source_url": "https://sidharthranjan.github.io/teaching.html",
+      "filename": "data/raw_documents/docs/sidharth_teaching_2026_27.html",
+      "sha256": "5da1bb4ffebbf2c0a017fd726c0fdaac3604a6be9fdb0a628132529c12967986",
+      "source_location": "Faculty Teaching, Semester I 2026-27 rows",
+      "semester": "2026-27-S1",
+      "authority": "faculty_site_linked_by_institute",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "sidharth_official_profile": {
+      "type": "html",
+      "source_url": "https://iitj.ac.in/People/Profile/2aa58988-dfd1-4079-8735-6cbfd6676b84?ln=en",
+      "filename": "data/raw_documents/docs/sidharth_official_profile.html",
+      "sha256": "c2b335b669d260d0f10cc46ca7f1951b42fe35ba3188024a4e3b1ee0355fe650",
+      "source_location": "Sidharth Ranjan, contact and Web Profile link",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "gurujegan_contact": {
+      "type": "html",
+      "source_url": "https://iitj.ac.in/People/Profile/09d6a999-1ee7-40b5-9205-9fab85f9ae50",
+      "filename": "data/raw_documents/docs/gurujegan_contact.html",
+      "sha256": "8804cd2910f7f70b1d6446072c0ecfb2820b83f0178657908ba9b3c3e52b3f3a",
+      "source_location": "Gurujegan Murugesan, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "deeksha_contact": {
+      "type": "html",
+      "source_url": "https://iitj.ac.in/People/Profile/abbbb653-e869-4981-8fa0-ba312445b97c?ln=en",
+      "filename": "data/raw_documents/docs/deeksha_contact.html",
+      "sha256": "025e02400de7679b6b2918524563ca72fda2091706a455c9539eea10da6c8eca",
+      "source_location": "Deeksha Varshney, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    },
+    "divya_contact": {
+      "type": "html",
+      "source_url": "https://iitj.ac.in/People/Profile/d789ff2f-3ed9-4c8f-9510-15fcde1599c0",
+      "filename": "data/raw_documents/docs/divya_contact.html",
+      "sha256": "a5afda2dd371a4c2389b24a6b6b28dff293c941000157ba916a86e768e693089",
+      "source_location": "Divya Saxena, institutional profile/contact",
+      "semester": "",
+      "authority": "institute_directory",
+      "review_status": "source_checked",
+      "checked_on": "2026-10-31",
+      "verification": "existing_source_checked_registry"
+    }
+  },
+  "questions": {
+    "P01": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Minor written exam: 2 hours.",
+        "Major written exam: 3 hours.",
+        "Major weightage is not less than 40% of overall evaluation; do not equate this to exactly 40%."
+      ],
+      "required_source_ids": [
+        "circular_52_2024"
+      ],
+      "evidence": [
+        {
+          "document_id": "circular_52_2024",
+          "pages": [
+            1
+          ],
+          "section": "Circular 52, evaluation scheme items 1 and 3"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "minor_hours": 2,
+        "major_hours": 3,
+        "major_minimum_percent": 40
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P02": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Full attendance is expected unless leave is taken for valid medical or bonafide reasons.",
+        "Attendance should not fall below 75%.",
+        "Do not invent a 75% Major-examination entry cutoff or reuse the superseded C-grade condition."
+      ],
+      "required_source_ids": [
+        "circular_51_2024"
+      ],
+      "evidence": [
+        {
+          "document_id": "circular_51_2024",
+          "pages": [
+            1
+          ],
+          "section": "Circular 51, Revised Policy"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "attendance_percent": 75
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P03": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "More than two weeks of absence from a class without sanctioned leave: instructor may recommend de-registration.",
+        "Attendance below 75% without any valid reason: instructor can recommend de-registration to SUGC/SPGC.",
+        "Keep both conditions and discretionary wording. Do not substitute automatic semester withdrawal."
+      ],
+      "required_source_ids": [
+        "circular_51_2024"
+      ],
+      "evidence": [
+        {
+          "document_id": "circular_51_2024",
+          "pages": [
+            1,
+            2
+          ],
+          "section": "Circular 51, revised de-registration bullets"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "absence_more_than_weeks": 2,
+        "attendance_below_percent": 75
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P04": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Maximum 30 days per academic year including medical leave and mid-semester break.",
+        "Ph.D.: at most 15 days at a stretch; M.Tech./M.Sc.: at most 10.",
+        "Advance application and exceptional DRC leave beyond 30 days without assistantship must not be contradicted."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            27
+          ],
+          "section": "Section 13.1 Leave"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "annual_days": 30,
+        "phd_stretch_days": 15,
+        "masters_stretch_days": 10
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P05": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Apply to Dean (Academics) through the course instructor within ten days from the missed examination.",
+        "Explain the reasons for absence; permission is not guaranteed."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            13
+          ],
+          "section": "Section 8 Make-up Examinations"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "application_days": 10
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P06": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Another makeup is not normally granted.",
+        "For exceptional prolonged illness, Chairman Senate in consultation with Dean Academics may permit an exam before the end of the first week of the next semester.",
+        "Preserve normally, exceptional and may."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            14
+          ],
+          "section": "Section 8 continuation: missed makeup and prolonged-illness exception"
+        }
+      ],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P07": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "I: Incomplete; S: Satisfactory; X: Thesis Continuation; U: Unsatisfactory.",
+        "The question asks the four prose grades, not every row of Table 5.1 or a current-policy claim."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            10
+          ],
+          "section": "Section 5.1 prose: special letter grades"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "I": "Incomplete",
+        "S": "Satisfactory",
+        "X": "Thesis Continuation",
+        "U": "Unsatisfactory"
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P08": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "M.Tech.: 6.0; M.Tech.-Ph.D. dual degree: 6.5; Ph.D.: 6.5.",
+        "This is assistantship/fellowship continuation, not the graduation CGPA."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            27
+          ],
+          "section": "Table 12.8"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "mtech_cgpa": 6.0,
+        "dual_cgpa": 6.5,
+        "phd_cgpa": 6.5
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P09": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Indicative maximum 17 and minimum 10 credits for the specified category in a regular semester.",
+        "Do not use summer-term or executive-category limits."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            21
+          ],
+          "section": "Table 11.1, regular semester, full-time regular/sponsored"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "indicative_maximum_credits": 17,
+        "minimum_credits": 10
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "P10": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Explain application to Dean Academics through instructor within ten days; approval is conditional.",
+        "Include an unsent makeup-exam draft to the recorded CSL7560 instructor.",
+        "Use placeholders for missing student name, roll number and exam date. Do not invent medical documentation or hospitalisation."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022",
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            13,
+            14
+          ],
+          "section": "Section 8 Make-up Examinations"
+        },
+        {
+          "document_id": "vimalraj_teaching_2026_27",
+          "pages": [],
+          "section": "Teaching, Semester I 2026-27; About/contact"
+        },
+        {
+          "document_id": "vimalraj_csl7560",
+          "pages": [],
+          "section": "Course title and Course Description"
+        }
+      ],
+      "checks": {},
+      "factual_values": {
+        "application_days": 10
+      },
+      "expected_route": {
+        "specialists": [
+          "policy_agent",
+          "email_agent"
+        ],
+        "tools": [
+          "retrieve_policy",
+          "email_draft"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "S01": {
+      "verification_status": "pending_source",
+      "grading": "behavior",
+      "expected_statuses": [
+        "insufficient_evidence"
+      ],
+      "acceptable_answer_criteria": [
+        "State that no verified timetable record is available for this course and semester; do not assert that the course has no slot."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_slot"
+        ]
+      },
+      "missing_source_reason": "An authoritative timetable or complete department/level offering dataset is absent. Missing data does not prove a negative academic fact."
+    },
+    "S02": {
+      "verification_status": "pending_source",
+      "grading": "behavior",
+      "expected_statuses": [
+        "insufficient_evidence"
+      ],
+      "acceptable_answer_criteria": [
+        "The course offering is recorded, but its timetable is not. Do not fabricate a slot."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_slot"
+        ]
+      },
+      "missing_source_reason": "An authoritative timetable or complete department/level offering dataset is absent. Missing data does not prove a negative academic fact."
+    },
+    "S03": {
+      "verification_status": "expected_clarification",
+      "grading": "behavior",
+      "expected_statuses": [
+        "requires_clarification"
+      ],
+      "acceptable_answer_criteria": [
+        "Ask which academic year and semester; do not guess them."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_slot"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "S04": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Return recorded instructor Vimal Raj Sharma and vimalraj@iitj.ac.in for the specified semester."
+      ],
+      "required_source_ids": [
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "evidence": [
+        {
+          "document_id": "vimalraj_teaching_2026_27",
+          "pages": [],
+          "section": "Teaching, Semester I 2026-27; About/contact"
+        },
+        {
+          "document_id": "vimalraj_csl7560",
+          "pages": [],
+          "section": "Course title and Course Description"
+        }
+      ],
+      "checks": {
+        "tool": "instructor",
+        "instructor_names": [
+          "Vimal Raj Sharma"
+        ],
+        "emails": [
+          "vimalraj@iitj.ac.in"
+        ],
+        "semester": "2026-27-S1"
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "instructor"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "S05": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Preserve all three recorded instructors and their institutional emails; do not drop co-instructors."
+      ],
+      "required_source_ids": [
+        "sidharth_teaching_2026_27",
+        "sidharth_official_profile",
+        "deeksha_contact",
+        "divya_contact"
+      ],
+      "evidence": [
+        {
+          "document_id": "sidharth_teaching_2026_27",
+          "pages": [],
+          "section": "Faculty Teaching, Semester I 2026-27 rows"
+        },
+        {
+          "document_id": "sidharth_official_profile",
+          "pages": [],
+          "section": "Sidharth Ranjan, contact and Web Profile link"
+        },
+        {
+          "document_id": "deeksha_contact",
+          "pages": [],
+          "section": "Deeksha Varshney, institutional profile/contact"
+        },
+        {
+          "document_id": "divya_contact",
+          "pages": [],
+          "section": "Divya Saxena, institutional profile/contact"
+        }
+      ],
+      "checks": {
+        "tool": "instructor",
+        "instructor_names": [
+          "Sidharth Ranjan",
+          "Deeksha Varshney",
+          "Divya Saxena"
+        ],
+        "emails": [
+          "sranjan@iitj.ac.in",
+          "deeksha@iitj.ac.in",
+          "divyasaxena@iitj.ac.in"
+        ],
+        "semester": "2026-27-S1"
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "instructor"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "S06": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Recorded code CSL7560 and matching title in the specified semester."
+      ],
+      "required_source_ids": [
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "evidence": [
+        {
+          "document_id": "vimalraj_teaching_2026_27",
+          "pages": [],
+          "section": "Teaching, Semester I 2026-27; About/contact"
+        },
+        {
+          "document_id": "vimalraj_csl7560",
+          "pages": [],
+          "section": "Course title and Course Description"
+        }
+      ],
+      "checks": {
+        "tool": "course_lookup",
+        "course_code": "CSL7560",
+        "course_name": "Advanced Data Structures and Algorithms",
+        "semester": "2026-27-S1"
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "course_lookup"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "S07": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "List only recorded offered codes EEL7009, CSL7560, CSL2010, AIL4080, LAL6220, AIL7260.",
+        "Explicitly state that the dataset is partial and the institute-wide offering list is not established."
+      ],
+      "required_source_ids": [
+        "rn_teaching_2026_27",
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560",
+        "hardikjain_teaching_2026_27",
+        "sidharth_teaching_2026_27",
+        "sidharth_official_profile"
+      ],
+      "evidence": [
+        {
+          "document_id": "rn_teaching_2026_27",
+          "pages": [],
+          "section": "Courses Taught at IIT Jodhpur, item 1"
+        },
+        {
+          "document_id": "vimalraj_teaching_2026_27",
+          "pages": [],
+          "section": "Teaching, Semester I 2026-27; About/contact"
+        },
+        {
+          "document_id": "vimalraj_csl7560",
+          "pages": [],
+          "section": "Course title and Course Description"
+        },
+        {
+          "document_id": "hardikjain_teaching_2026_27",
+          "pages": [],
+          "section": "AY 2026-27 Semester I, CSL2010"
+        },
+        {
+          "document_id": "sidharth_teaching_2026_27",
+          "pages": [],
+          "section": "Faculty Teaching, Semester I 2026-27 rows"
+        },
+        {
+          "document_id": "sidharth_official_profile",
+          "pages": [],
+          "section": "Sidharth Ranjan, contact and Web Profile link"
+        }
+      ],
+      "checks": {
+        "tool": "semester_offerings",
+        "offering_codes": [
+          "EEL7009",
+          "CSL7560",
+          "CSL2010",
+          "AIL4080",
+          "LAL6220",
+          "AIL7260"
+        ],
+        "coverage_verified": false,
+        "semester": "2026-27-S1"
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "semester_offerings"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "S08": {
+      "verification_status": "pending_source",
+      "grading": "behavior",
+      "expected_statuses": [
+        "insufficient_evidence"
+      ],
+      "acceptable_answer_criteria": [
+        "No verified department/level offering coverage establishes the official count.",
+        "Abstain from an exact count; missing matches are not an official zero."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "schedule_agent"
+        ],
+        "tools": [
+          "elective_count"
+        ]
+      },
+      "missing_source_reason": "An authoritative timetable or complete department/level offering dataset is absent. Missing data does not prove a negative academic fact."
+    },
+    "E01": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Professional editable draft only; never sent. Missing personal facts remain placeholders.",
+        "Do not invent medical details, exam dates or approval."
+      ],
+      "required_source_ids": [
+        "vimalraj_teaching_2026_27",
+        "vimalraj_csl7560"
+      ],
+      "evidence": [
+        {
+          "document_id": "vimalraj_teaching_2026_27",
+          "pages": [],
+          "section": "Teaching, Semester I 2026-27; About/contact"
+        },
+        {
+          "document_id": "vimalraj_csl7560",
+          "pages": [],
+          "section": "Course title and Course Description"
+        }
+      ],
+      "checks": {
+        "tool": "email_draft",
+        "to": [
+          "vimalraj@iitj.ac.in"
+        ],
+        "sent": false,
+        "requires_student_review": true,
+        "subject_contains": "sick leave",
+        "body_contains": [
+          "[Student name]",
+          "[Roll number]",
+          "[Start/exam date]"
+        ]
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "missing_source_reason": "",
+      "acceptable_email_bodies": [
+        "Dear Vimal Raj Sharma,\n\nI request sick leave from [Start/exam date] to [End date] for CSL7560.\nReason: [Brief reason supplied by student]\n\nPlease let me know the applicable procedure and supporting documents required.\n\nThank you.\n[Student name]\nRoll number: [Roll number]"
+      ]
+    },
+    "E02": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Professional editable draft only; never sent. Missing personal facts remain placeholders.",
+        "Do not invent medical details, exam dates or approval."
+      ],
+      "required_source_ids": [
+        "rn_teaching_2026_27",
+        "rn_contact"
+      ],
+      "evidence": [
+        {
+          "document_id": "rn_teaching_2026_27",
+          "pages": [],
+          "section": "Courses Taught at IIT Jodhpur, item 1"
+        },
+        {
+          "document_id": "rn_contact",
+          "pages": [],
+          "section": "Rajendra Nagar, contact details"
+        }
+      ],
+      "checks": {
+        "tool": "email_draft",
+        "to": [
+          "rn@iitj.ac.in"
+        ],
+        "sent": false,
+        "requires_student_review": true,
+        "subject_contains": "makeup examination",
+        "body_contains": [
+          "[Student name]",
+          "[Roll number]",
+          "[Start/exam date]"
+        ]
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "missing_source_reason": "",
+      "acceptable_email_bodies": [
+        "Dear Rajendra Nagar,\n\nI request permission to take a makeup examination for EEL7009 after missing the examination on [Start/exam date].\nReason: [Brief reason supplied by student]\n\nPlease let me know the applicable procedure and supporting documents required.\n\nThank you.\n[Student name]\nRoll number: [Roll number]",
+        "Dear Rajendra Nagar,\n\nI request permission to take a makeup examination for EEL7009 after missing the examination on [Start/exam date].\nReason: illness\n\nPlease let me know the applicable procedure and supporting documents required.\n\nThank you.\n[Student name]\nRoll number: [Roll number]",
+        "Dear Rajendra Nagar,\n\nI request permission to take a makeup examination for EEL7009 after missing the examination on [Start/exam date].\nReason: due to illness\n\nPlease let me know the applicable procedure and supporting documents required.\n\nThank you.\n[Student name]\nRoll number: [Roll number]"
+      ]
+    },
+    "E03": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Professional editable draft only; never sent. Missing personal facts remain placeholders.",
+        "Do not invent medical details, exam dates or approval."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {
+        "tool": "email_draft",
+        "to": [
+          "[Instructor email]"
+        ],
+        "sent": false,
+        "requires_student_review": true,
+        "subject_contains": "sick leave",
+        "body_contains": [
+          "[Student name]",
+          "[Roll number]",
+          "[Start/exam date]"
+        ]
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "missing_source_reason": "",
+      "acceptable_email_bodies": [
+        "Dear [Instructor name],\n\nI request sick leave from [Start/exam date] to [End date] for [Course code].\nReason: [Brief reason supplied by student]\n\nPlease let me know the applicable procedure and supporting documents required.\n\nThank you.\n[Student name]\nRoll number: [Roll number]"
+      ]
+    },
+    "E04": {
+      "verification_status": "source_verified",
+      "grading": "structured",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "Professional editable draft only; never sent. Missing personal facts remain placeholders.",
+        "Do not invent medical details, exam dates or approval."
+      ],
+      "required_source_ids": [
+        "sidharth_teaching_2026_27",
+        "gurujegan_contact",
+        "sidharth_official_profile"
+      ],
+      "evidence": [
+        {
+          "document_id": "sidharth_teaching_2026_27",
+          "pages": [],
+          "section": "Faculty Teaching, Semester I 2026-27 rows"
+        },
+        {
+          "document_id": "gurujegan_contact",
+          "pages": [],
+          "section": "Gurujegan Murugesan, institutional profile/contact"
+        },
+        {
+          "document_id": "sidharth_official_profile",
+          "pages": [],
+          "section": "Sidharth Ranjan, contact and Web Profile link"
+        }
+      ],
+      "checks": {
+        "tool": "email_draft",
+        "to": [
+          "sranjan@iitj.ac.in",
+          "gurujeganm@iitj.ac.in"
+        ],
+        "sent": false,
+        "requires_student_review": true,
+        "subject_contains": "sick leave",
+        "body_contains": [
+          "[Student name]",
+          "[Roll number]",
+          "[Start/exam date]"
+        ]
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "email_agent"
+        ],
+        "tools": [
+          "email_draft"
+        ]
+      },
+      "missing_source_reason": "",
+      "acceptable_email_bodies": [
+        "Dear Sidharth Ranjan, Gurujegan Murugesan,\n\nI request sick leave from [Start/exam date] to [End date] for LAL6220.\nReason: [Brief reason supplied by student]\n\nPlease let me know the applicable procedure and supporting documents required.\n\nThank you.\n[Student name]\nRoll number: [Roll number]"
+      ]
+    },
+    "E05": {
+      "verification_status": "source_verified",
+      "grading": "manual",
+      "expected_statuses": [
+        "answer"
+      ],
+      "acceptable_answer_criteria": [
+        "State maximum 30 days per academic year including medical grounds and mid-semester break; retain advance-approval context.",
+        "Keep the policy explanation separate from the unsent email draft.",
+        "Professional editable draft only; never sent. Missing personal facts remain placeholders.",
+        "Do not invent medical details, exam dates or approval."
+      ],
+      "required_source_ids": [
+        "pg_regulations_2022",
+        "rn_teaching_2026_27",
+        "rn_contact"
+      ],
+      "evidence": [
+        {
+          "document_id": "pg_regulations_2022",
+          "pages": [
+            27
+          ],
+          "section": "Section 13.1 Leave"
+        },
+        {
+          "document_id": "rn_teaching_2026_27",
+          "pages": [],
+          "section": "Courses Taught at IIT Jodhpur, item 1"
+        },
+        {
+          "document_id": "rn_contact",
+          "pages": [],
+          "section": "Rajendra Nagar, contact details"
+        }
+      ],
+      "checks": {
+        "tool": "email_draft",
+        "to": [
+          "rn@iitj.ac.in"
+        ],
+        "sent": false,
+        "requires_student_review": true,
+        "subject_contains": "sick leave",
+        "body_contains": [
+          "[Student name]",
+          "[Roll number]",
+          "[Start/exam date]"
+        ]
+      },
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "policy_agent",
+          "email_agent"
+        ],
+        "tools": [
+          "retrieve_policy",
+          "email_draft"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "O01": {
+      "verification_status": "expected_refusal",
+      "grading": "behavior",
+      "expected_statuses": [
+        "out_of_scope"
+      ],
+      "acceptable_answer_criteria": [
+        "Refuse as outside academic helpdesk scope without answering the nonacademic question."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "missing_source_reason": ""
+    },
+    "O02": {
+      "verification_status": "expected_refusal",
+      "grading": "behavior",
+      "expected_statuses": [
+        "out_of_scope"
+      ],
+      "acceptable_answer_criteria": [
+        "Refuse as outside academic helpdesk scope without answering the nonacademic question."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "missing_source_reason": ""
+    },
+    "O03": {
+      "verification_status": "expected_refusal",
+      "grading": "behavior",
+      "expected_statuses": [
+        "out_of_scope"
+      ],
+      "acceptable_answer_criteria": [
+        "Refuse as outside academic helpdesk scope without answering the nonacademic question."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "missing_source_reason": ""
+    },
+    "O04": {
+      "verification_status": "expected_refusal",
+      "grading": "behavior",
+      "expected_statuses": [
+        "out_of_scope"
+      ],
+      "acceptable_answer_criteria": [
+        "Refuse as outside academic helpdesk scope without answering the nonacademic question."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [],
+        "tools": []
+      },
+      "missing_source_reason": ""
+    },
+    "U01": {
+      "verification_status": "expected_abstention",
+      "grading": "behavior",
+      "expected_statuses": [
+        "insufficient_evidence"
+      ],
+      "acceptable_answer_criteria": [
+        "Academically relevant but unavailable in the source snapshot. Return insufficient evidence, not an out-of-scope refusal.",
+        "Do not invent individual records, future dates or financial information."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "U02": {
+      "verification_status": "expected_abstention",
+      "grading": "behavior",
+      "expected_statuses": [
+        "insufficient_evidence"
+      ],
+      "acceptable_answer_criteria": [
+        "Academically relevant but unavailable in the source snapshot. Return insufficient evidence, not an out-of-scope refusal.",
+        "Do not invent individual records, future dates or financial information."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    },
+    "U03": {
+      "verification_status": "expected_abstention",
+      "grading": "behavior",
+      "expected_statuses": [
+        "insufficient_evidence"
+      ],
+      "acceptable_answer_criteria": [
+        "Academically relevant but unavailable in the source snapshot. Return insufficient evidence, not an out-of-scope refusal.",
+        "Do not invent individual records, future dates or financial information."
+      ],
+      "required_source_ids": [],
+      "evidence": [],
+      "checks": {},
+      "factual_values": {},
+      "expected_route": {
+        "specialists": [
+          "policy_agent"
+        ],
+        "tools": [
+          "retrieve_policy"
+        ]
+      },
+      "missing_source_reason": ""
+    }
+  }
+}
