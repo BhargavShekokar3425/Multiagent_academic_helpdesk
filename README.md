@@ -94,3 +94,71 @@ only, leave missing student details as placeholders, and never send messages.
 To import new official records, follow
 [data/structured/staging/2026-27-S1/README.md](data/structured/staging/2026-27-S1/README.md).
 The source request in reports/semester_2026_27_s1_records_request.md remains unsent.
+
+
+## Single-agent and multi-agent execution
+
+The baseline remains the default. Choose the architecture explicitly for comparable
+runs against the same local model, documents, Chroma collection and structured CSVs:
+
+```powershell
+python -m src.single_agent --mode single --query "What are minor and major exam durations and minimum Major examination weightage?" --extractive --debug
+python -m src.single_agent --mode multi --query "What are minor and major exam durations and minimum Major examination weightage?" --extractive --debug
+python -m src.single_agent --mode multi --query "What is the slot for Autonomous Systems?" --semester "2026-27-S1" --debug
+python -m src.single_agent --mode multi --program "PG" --query "I missed my Major exam due to illness. Explain the applicable makeup-exam policy and draft an email to the instructor." --extractive --debug
+```
+
+For the ADK entry point (`src.agent.root_agent`), set
+`HELPDESK_AGENT_MODE=single` or `HELPDESK_AGENT_MODE=multi` before starting ADK.
+In PowerShell: `$env:HELPDESK_AGENT_MODE = "multi"`. CLI `--mode` takes precedence.
+Restart ADK after changing the environment; root_agent is constructed on import.
+No additional dependencies or models are required.
+
+The multi-agent architecture uses an ADK BaseAgent coordinator with three
+single-turn LlmAgent sub-agents:
+
+- Policy Agent: existing retrieve_policy tool and all existing citation, support,
+  qualifier and bounded-revision checks.
+- Schedule Agent: exact course, semester, slot, offering, instructor and
+  Python-computed elective-count tools.
+- Email Agent: course resolution, verified instructor lookup and existing unsent
+  email templates. Missing personal facts and contacts remain placeholders.
+
+The coordinator selects specialists using explicit intent rules, invokes each
+selected specialist once, and combines canonical validated results in Python.
+It does not ask another LLM to rewrite validated policy claims or drafts.
+ADK sub_agents were selected over AgentTool wrappers so sequencing, state handoff
+and final rendering stay explicit inside one Runner/session. The installed ADK
+also recommends single-turn sub-agents over direct AgentTool wrappers.
+The root coordinator is intentionally deterministic; the three specialists use
+the shared local model configuration and execute sequentially.
+
+Each policy handoff rechecks quote identity and, for extractive answers, source
+boundaries and qualifying conditions. Paraphrased answers must have passed the
+baseline support review. Structured results are reconstructed from server-owned
+tool records. Unvalidated specialist prose is never the final answer.
+
+Responses contain status, answer, citations and sections. Single-specialist
+structured answers also expose tool, lookup_status and data. Mixed success/failure
+returns partial_answer and retains the successful section. With --debug, routing,
+agent_calls, tool_calls and specialist_diagnostics expose what ran. Errors,
+refusals and unresolved requests reuse the existing review log, once per request.
+
+Timetable coverage remains empty. Offering and instructor coverage remains partial.
+A recorded elective count is explicitly partial unless complete coverage was
+declared for that semester. No missing course, slot, address, medical detail or
+examination date is generated to fill a data gap. Drafts are never sent.
+
+Offline tests mock model inference while exercising real ADK Runner sessions,
+callbacks, tools, handoff validation and logging. Synthetic academic records stay
+inside isolated tests:
+
+```powershell
+python -m pytest tests/test_multi_agent.py tests/test_repository_validity.py -q -p no:cacheprovider
+python -m pytest tests -q -p no:cacheprovider
+```
+
+The milestone's local Qwen3 smoke checks covered the exam-duration question and
+the mixed makeup-policy/email request. These are smoke checks, not an accuracy
+evaluation or Windows memory benchmark. Current policy applicability and OCR review
+warnings remain visible. Llama comparison and full evaluation are subsequent work.
