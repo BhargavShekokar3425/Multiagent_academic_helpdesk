@@ -88,4 +88,4 @@ def test_agent_registers_all_assignment_tools():
     agent = build_agent(extractive=True)
     names = {tool.__name__ for tool in agent.tools}
     assert names == {"retrieve_policy", "course_slot", "courses_in_slot",
-                     "elective_count", "instructor", "email_draft"}
+                     "elective_count", "instructor", "email_draft", "course_lookup", "semester_offerings"}

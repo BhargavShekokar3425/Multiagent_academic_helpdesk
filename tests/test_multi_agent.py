@@ -123,7 +123,7 @@ def test_factories_and_mode_selection(monkeypatch):
     assert [a.name for a in root.sub_agents] == ["policy_agent", "schedule_agent", "email_agent"]
     assert [t.__name__ for t in root.sub_agents[0].tools] == ["retrieve_policy"]
     assert {t.__name__ for t in baseline.build_agent().tools} == {
-        "retrieve_policy", "course_slot", "courses_in_slot", "elective_count", "instructor", "email_draft"}
+        "retrieve_policy", "course_slot", "courses_in_slot", "elective_count", "instructor", "email_draft", "course_lookup", "semester_offerings"}
     monkeypatch.setenv("HELPDESK_AGENT_MODE", "multi")
     assert build_root_agent().name == "academic_helpdesk_orchestrator"
     with pytest.raises(ValueError):
@@ -238,6 +238,9 @@ def test_two_specialist_errors_log_once(model, records, monkeypatch, tmp_path):
     db = tmp_path / "review.sqlite3"
     monkeypatch.setenv("DATABASE_PATH", str(db))
     model["fail"] = {"policy", "email"}
+    def fail_draft(*args, **kwargs):
+        raise RuntimeError("Synthetic email tool failure")
+    monkeypatch.setattr("src.agents.common.email_draft", fail_draft)
     result = run(MIXED + " Course TEST401.", semester=SEMESTER)
     assert result["status"] == "error", result
     with sqlite3.connect(db) as connection:
@@ -322,8 +325,13 @@ def test_unknown_slot_argument_cannot_be_invented():
 def test_email_requires_final_draft_not_intermediate_contact(model, records):
     model["tool"] = "instructor"
     result = run("Draft a sick-leave email for TEST401.", semester=SEMESTER)
-    assert result["status"] == "insufficient_evidence", result
-    assert result["sections"][0]["validation"] == "rejected"
+    assert result["status"] == "answer", result
+    assert result["tool"] == "email_draft"
+    # An intermediate contact is still forbidden as the final email handoff.
+    assert validate_handoff("email", {
+        "status": "answer", "validation": "deterministic_tool_result",
+        "tool": "instructor", "data": {}, "citations": []},
+        [], {}, "")["validation"] == "rejected"
 
 
 def test_no_internal_debug_fields_without_debug(model):
