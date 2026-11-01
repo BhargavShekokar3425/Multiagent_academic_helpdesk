@@ -193,3 +193,15 @@ It exposed incomplete/failed supported lookups and mixed requests as well as ans
 variation. A scoring false positive for wrapped out-of-scope responses was corrected
 and saved pilot responses were explicitly rescored; original artifacts were retained.
 This pilot is not a final 30-question evaluation or an assignment conclusion.
+
+## Full-v2 final revision
+
+The selected run is `results/raw/full-v2/revision-2/`; parent first-attempt outputs
+and full-v1 remain preserved. Current baseline has eight shared tool capabilities.
+Grades are AI-assisted, not independent human sign-off. A mechanical
+manual_review_complete field means all scoring fields are populated; consult
+review_type and human_verified for provenance. Run exports using:
+
+```powershell
+python -m evaluation.export_results --comparison evaluation/results/raw/full-v2/revision-2 --output reports/full_v2
+```

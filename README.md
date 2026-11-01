@@ -1,176 +1,222 @@
-# Multi-Agent Academic Helpdesk
+# IIT Jodhpur Multi-Agent Academic Helpdesk
 
-Local IIT Jodhpur academic helpdesk using Google ADK, Ollama, ChromaDB and CSV lookups.
-The current implemented path is the single-agent baseline. Specialist-agent evaluation
-is tracked separately; see [the working checklist](reports/helpdesk_todo.md).
+A local academic helpdesk supporting policy evidence, course identity/offerings,
+semester-specific faculty/slot lookups, unsent academic email drafts and safe abstention.
+The assignment compares a single ADK agent with an orchestrator and three specialists.
 
-## Current data status
+## Architecture
 
-Semester I, AY 2026–27 has six faculty-recorded courses and nine instructor assignments.
-Coverage is partial: the verified timetable and complete departmental offering export
-are still missing. Slot queries return a specific missing-record response. Recorded
-elective matches are labelled partial; they do not establish the official total.
-
-Source records and limitations: [source report](reports/structured_data_source_check.md).
-Original HTML/PDF files live in data/raw_documents/docs/ and scanned/.
-HTML citations use URLs and section locations from data/structured/source_registry.json;
-PDF citations use the document manifest and page numbers. Source files must retain
-their recorded SHA-256. HTML files are not automatically inserted into the PDF pipeline.
-
-## Setup on Linux
-
-From the project directory, using Python 3.12:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m pip check
+```mermaid
+flowchart TD
+    Q[Student request] --> M{single or multi}
+    M --> B[Single ADK agent: shared tools]
+    M --> O[Deterministic ADK Helpdesk Orchestrator]
+    O --> P[Policy Agent]
+    O --> S[Schedule Agent]
+    O --> E[Email Agent]
+    P --> R[Existing Chroma RAG + exact-reference fallback]
+    B --> R
+    B --> T[Structured CSV tools]
+    S --> T
+    E --> D[Faculty-backed draft templates]
+    R --> V[Exact citations, context/qualifier checks, one revision]
+    T --> C[Canonical server-owned results]
+    D --> C
+    V --> F[Final response]
+    C --> F
+    F --> L[Request-local unanswered logging when needed]
 ```
 
-Ollama must be installed and serving locally for live policy/RAG calls.
-The existing defaults are qwen3:8b and nomic-embed-text. If models are not installed:
+Both modes share eight tools, the same source snapshot/index, local model settings
+(temperature 0, context 8192, output cap 2400), exact citation checks and logging.
+Multi specialists execute sequentially. Final composition uses validated Python
+results; no final LLM rewrites policy citations or email drafts. Emails are never sent.
+Model-generated student dates, names and diagnoses are not trusted.
 
-```bash
-ollama pull qwen3:8b
-ollama pull nomic-embed-text
+Technology: Python 3.12, Google ADK, LiteLLM, Ollama, Qwen3 8B,
+optional Llama 3.1 8B, ChromaDB, nomic-embed-text, PyMuPDF, CSV/SQLite,
+pytest and matplotlib. Dependencies are pinned in requirements.txt.
+
+## Dataset and limitations
+
+The local source snapshot has 24 PDFs and 111 extracted pages, plus checked HTML
+provenance for structured data. Nineteen extracted pages still need review.
+The active development index contains 215 chunks, including flagged content.
+Known records cover six offerings and nine instructor assignments in 2026-27-S1.
+The timetable is empty and complete offering/category coverage is unavailable.
+Missing rows do not prove an official zero. Policy applicability/currentness remains
+unknown where not independently established; warnings are retained.
+
+Use only authorized local documents. Some official listings are intranet-only.
+Do not publish source PDFs, private records, .env, model weights, databases or raw
+evaluation traces. See evaluation/DATA_REQUIREMENTS.md and the readiness report.
+The manifest and existing source moves require a separate access/provenance review.
+
+## Repository layout
+
+- src/single_agent.py: baseline Runner/API and policy validation.
+- src/agent.py: ADK entry point and mode selection.
+- src/orchestration.py and src/agents/: coordinator and specialists.
+- src/request_context.py: shared trusted request context and facts.
+- src/tools/: RAG, CSV lookup, canonical rendering, drafts and logging.
+- src/validation/: citations, source excerpts, tables, qualifiers and bounded repair.
+- ingestion/: extraction, cleaning, chunking and indexing.
+- evaluation/: fixed questions, source-pinned ground truth, runner, scorer and exports.
+- tests/: offline regressions with isolated records and mocked inference.
+- scripts/: source, hardware and submission verification.
+- reports/: report, charts and verification outputs.
+
+## Windows PowerShell setup
+
+Install Python 3.12 and Ollama from the official Windows installer:
+https://ollama.com/download/windows
+Official Windows instructions: https://docs.ollama.com/windows
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
 ollama list
 ```
 
-Optional .env settings:
+The Ollama desktop app normally serves localhost:11434. If it is not running, start
+`ollama serve` in a separate terminal. Do not start a duplicate server.
 
-```dotenv
-LLM_MODEL=qwen3:8b
-EMBED_MODEL=nomic-embed-text
-OLLAMA_API_BASE=http://localhost:11434
-CHROMA_PATH=data/vector_store
+```powershell
+ollama pull nomic-embed-text
+ollama pull qwen3:8b
+# Optional, required only for the four-configuration model comparison:
+ollama pull llama3.1:8b
+python -m evaluation.compare_models --check
 ```
 
-The requirements file is UTF-8 and includes the installed MCP dependency required by
-the current LiteLLM import path. Setup commands above are documented for reuse;
-this maintenance pass did not recreate the environment or download models.
+All inference is local. The framework does not automatically install missing models.
+Use one generation model at a time; the comparison command unloads competing chat
+models and executes configurations sequentially.
 
-## Offline checks (no model calls or email sending)
+### OCR and Poppler
 
-```bash
-python -m ingestion.validate_structured_data --semester 2026-27-S1 --output reports/structured_readiness.json
-python -m evaluation.check_structured_data --semester 2026-27-S1 --output reports/structured_smoke.json
-python -m pytest tests -q -p no:cacheprovider
+Text extraction can require Poppler's pdftotext and Tesseract with matching language
+traineddata for scanned documents. Install authorized Windows builds and add the
+executables to PATH. Configure the actual tessdata directory as needed; do not copy a
+Linux path into Windows. Reference:
+https://pymupdf.readthedocs.io/en/latest/installation.html
+
+```powershell
+Get-Command pdftotext
+pdftotext -v
+tesseract --version
 ```
 
-A passing smoke check means the imported rows work through the tools. It does not mean
-the dataset is complete. The readiness report must still show ready=false while
-official records or coverage declarations are missing. Keep partial coverage flags false.
+The Windows workflow is prepared but has not been executed on a Windows 16 GB laptop.
+Run scripts.verify_hardware there and inspect its RSS/GPU measurements; they are
+measurement proxies, not a substitute for checking actual target-machine behavior.
 
-## Live policy and retrieval checks
+## Rebuild procedure (new paths; preserve existing experiment sources/index)
 
-An existing compatible Chroma collection is needed. The current local collection
-includes review-flagged passages, and source warnings are retained.
+First ensure every manifest filename exists locally and its use is authorized.
+Never rebuild an index in place while comparing experiments.
 
-```bash
-python -m src.tools.rag --query "What are the Minor and Major examination durations?"
-python -m src.single_agent --query "What are minor and major exam durations and minimum Major examination weightage?" --extractive --debug
-python -m src.single_agent --query "What is the slot for Autonomous Systems?" --semester "2026-27-S1" --extractive --debug
+```powershell
+python -m ingestion.extract_documents --output-dir data/processed/rebuild_extracted
+python -m ingestion.clean_documents --input data/processed/rebuild_extracted/extracted_pages.jsonl --output-dir data/processed/rebuild_cleaned
+python -m ingestion.chunk_documents --input data/processed/rebuild_cleaned/cleaned_pages.jsonl --output-dir data/processed/rebuild_chunked
+python -m ingestion.build_vector_store --chunks data/processed/rebuild_chunked/chunks.jsonl --chroma-path data/vector_store_rebuild --include-review
 ```
 
-The last command currently returns no verified timetable record. It must not use
-historical teaching lists to invent a slot.
+--include-review explicitly creates a development index with warnings; it does not
+certify OCR or table semantics. A new corpus/index is a new dataset snapshot.
+For the preserved full-v1/full-v2 comparison, use the existing compatible snapshot.
 
-Extractive policy answers select source-owned excerpts, validate citations and
-qualifiers, and allow at most one revision before abstaining. Passing quote checks
-does not independently establish current policy or cohort applicability.
-
-## Structured tools
-
-- courses.csv: semester-specific course records, including known metadata.
-- timetable.csv: course, semester, section, slot and meetings.
-- faculty.csv: all recorded course instructors and institutional emails.
-- source_registry.json: checked HTML sources, locations, hashes and coverage.
-- additional_source_ids: semicolon-separated contact or linked-course evidence.
-
-Instructor and email tools retain co-instructors. Email tools produce editable drafts
-only, leave missing student details as placeholders, and never send messages.
-
-To import new official records, follow
-[data/structured/staging/2026-27-S1/README.md](data/structured/staging/2026-27-S1/README.md).
-The source request in reports/semester_2026_27_s1_records_request.md remains unsent.
-
-
-## Single-agent and multi-agent execution
-
-The baseline remains the default. Choose the architecture explicitly for comparable
-runs against the same local model, documents, Chroma collection and structured CSVs:
+## Run the helpdesk
 
 ```powershell
 python -m src.single_agent --mode single --query "What are minor and major exam durations and minimum Major examination weightage?" --extractive --debug
 python -m src.single_agent --mode multi --query "What are minor and major exam durations and minimum Major examination weightage?" --extractive --debug
 python -m src.single_agent --mode multi --query "What is the slot for Autonomous Systems?" --semester "2026-27-S1" --debug
-python -m src.single_agent --mode multi --program "PG" --query "I missed my Major exam due to illness. Explain the applicable makeup-exam policy and draft an email to the instructor." --extractive --debug
+python -m src.single_agent --mode multi --program PG --semester "2026-27-S1" --query "I missed my Major exam in CSL7560 due to illness. Explain the makeup policy and draft an email to the instructor." --extractive --debug
 ```
 
-For the ADK entry point (`src.agent.root_agent`), set
-`HELPDESK_AGENT_MODE=single` or `HELPDESK_AGENT_MODE=multi` before starting ADK.
-In PowerShell: `$env:HELPDESK_AGENT_MODE = "multi"`. CLI `--mode` takes precedence.
-Restart ADK after changing the environment; root_agent is constructed on import.
-No additional dependencies or models are required.
+For the ADK entry point src.agent.root_agent, set
+`$env:HELPDESK_AGENT_MODE = "multi"` before starting ADK. Default is single.
+Restart ADK after changing mode/model environment variables.
+Missing timetable questions correctly return no verified record.
 
-The multi-agent architecture uses an ADK BaseAgent coordinator with three
-single-turn LlmAgent sub-agents:
-
-- Policy Agent: existing retrieve_policy tool and all existing citation, support,
-  qualifier and bounded-revision checks.
-- Schedule Agent: exact course, semester, slot, offering, instructor and
-  Python-computed elective-count tools.
-- Email Agent: course resolution, verified instructor lookup and existing unsent
-  email templates. Missing personal facts and contacts remain placeholders.
-
-The coordinator selects specialists using explicit intent rules, invokes each
-selected specialist once, and combines canonical validated results in Python.
-It does not ask another LLM to rewrite validated policy claims or drafts.
-ADK sub_agents were selected over AgentTool wrappers so sequencing, state handoff
-and final rendering stay explicit inside one Runner/session. The installed ADK
-also recommends single-turn sub-agents over direct AgentTool wrappers.
-The root coordinator is intentionally deterministic; the three specialists use
-the shared local model configuration and execute sequentially.
-
-Each policy handoff rechecks quote identity and, for extractive answers, source
-boundaries and qualifying conditions. Paraphrased answers must have passed the
-baseline support review. Structured results are reconstructed from server-owned
-tool records. Unvalidated specialist prose is never the final answer.
-
-Responses contain status, answer, citations and sections. Single-specialist
-structured answers also expose tool, lookup_status and data. Mixed success/failure
-returns partial_answer and retains the successful section. With --debug, routing,
-agent_calls, tool_calls and specialist_diagnostics expose what ran. Errors,
-refusals and unresolved requests reuse the existing review log, once per request.
-
-Timetable coverage remains empty. Offering and instructor coverage remains partial.
-A recorded elective count is explicitly partial unless complete coverage was
-declared for that semester. No missing course, slot, address, medical detail or
-examination date is generated to fill a data gap. Drafts are never sent.
-
-Offline tests mock model inference while exercising real ADK Runner sessions,
-callbacks, tools, handoff validation and logging. Synthetic academic records stay
-inside isolated tests:
+## Tests, readiness and hardware
 
 ```powershell
-python -m pytest tests/test_multi_agent.py tests/test_repository_validity.py -q -p no:cacheprovider
 python -m pytest tests -q -p no:cacheprovider
+python -m scripts.source_readiness
+python -m ingestion.validate_structured_data --semester 2026-27-S1
+python -m scripts.verify_hardware --live
+python -m scripts.verify_submission --tests
 ```
 
-The milestone's local Qwen3 smoke checks covered the exam-duration question and
-the mixed makeup-policy/email request. These are smoke checks, not an accuracy
-evaluation or Windows memory benchmark. Current policy applicability and OCR review
-warnings remain visible. Llama comparison and full evaluation are subsequent work.
+Normal tests do not require live inference. --live hardware checks are explicit,
+sequential and log to a temporary database. Readiness remains false while authorized
+coverage is incomplete. Latest exact test results are recorded in
+reports/submission_verification.json.
 
+## Evaluation and reproducibility
 
-## Benchmarking
+The fixed benchmark has 30 questions: 10 policy, 8 schedule, 5 email, 4 out-of-scope,
+3 unsupported. Nineteen are currently answerable. Three cases intentionally need
+missing authoritative sources. Two requests require policy/email coordination.
 
-The fixed 30-question evaluation dataset, source-pinned ground truth, sequential
-model comparison and manual grading workflow are documented in
-[evaluation/README.md](evaluation/README.md). Missing official data requirements
-are tracked in [evaluation/DATA_REQUIREMENTS.md](evaluation/DATA_REQUIREMENTS.md).
+```powershell
+python -m evaluation.evaluate validate
+python -m evaluation.compare_models --warmup --repetitions 3 --answer-mode extractive --output-dir evaluation/results/raw/full-v2-new
+python -m evaluation.export_results --comparison evaluation/results/raw/full-v2-new --output reports/full-v2-new
+```
 
-Quick checks: `python -m evaluation.evaluate validate` and
-`python -m evaluation.compare_models --check`. Experiments retain failed answers;
-manual policy accuracy remains pending until independently graded.
+Output directories must be new. Full-v1 is immutable, with preservation hashes in
+reports/full_v1_preservation.json. The recorded full-v2 lives under
+evaluation/results/raw/full-v2; do not rerun into that directory.
+
+Inputs, source/application/grading hashes, model digest, settings, residency, warmup,
+responses, tool arguments/outputs, citations, errors and stability are saved.
+Raw results are ignored by Git. Matched parity in v2 does not make prompts or
+coordination identical. V1 had a six-tool baseline, cold/warm imbalance and known
+generation/validation defects; improvements cannot be attributed solely to orchestration.
+
+Source identity, claim support, relevance, applicability, content correctness,
+strict task completion and outer status are distinct. No similarity or model
+self-review is accepted as authoritative grading. Human review is still needed.
+The approximately 20 priority v1 records are in
+evaluation/results/raw/review_support/full_v1_priority_human_review.json.
+
+```powershell
+Copy-Item evaluation/results/raw/full-v2-new/qwen3_8b-multi/review_template.json evaluation/results/raw/full-v2-new/qwen3_8b-multi/grades.json
+# Independently review the pinned sources and fill reviewer, scores and notes.
+python -m evaluation.evaluate grade --run-dir evaluation/results/raw/full-v2-new/qwen3_8b-multi --grades evaluation/results/raw/full-v2-new/qwen3_8b-multi/grades.json
+python -m evaluation.compare_models --summarize evaluation/results/raw/full-v2-new
+```
+
+See evaluation/README.md for grading/rescoring details. Do not modify old experiments
+to match a new rubric or dataset. AI-assisted reviews are labelled as such and do not
+constitute independent human sign-off.
+
+## Submission artifacts and findings
+
+- reports/final_report.md and reports/final_report.pdf: actual methodology/results.
+- reports/full_v2/: aggregate CSV, charts, stability and error triage.
+- reports/data_readiness_full_v2.json: source hashes and coverage gaps.
+- reports/hardware_verification.json: measured platform and optional live memory.
+- reports/submission_verification.json: final gates and external blockers.
+
+Full-v1 AI-assisted accuracy was 15/57 single and 36/57 multi. Read the final report
+for actual full-v2 results, grading coverage and experiment limitations. No claim of
+Llama quality, Windows certification or independently verified latest policy is made
+without corresponding evidence.
+
+Team contributions: [Member / implementation / data verification / evaluation /
+independent grading]. Replace with actual contributions before submission.
+
+Final selected live run: `evaluation/results/raw/full-v2/revision-2/`, pinned by
+`evaluation/results/raw/full-v2/final_selection.json`. The first full-v2 attempt is
+retained separately at the parent directory. AI-assisted accuracy: single54/57
+(94.74%), multi57/57 (100%); not independent human verification. Single E05
+remains incomplete; both modes have redundant P09 table excerpts rejected by the
+evaluator, so claim support is below100%. See the report for denominators and caveats.
