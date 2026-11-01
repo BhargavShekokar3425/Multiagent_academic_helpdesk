@@ -147,6 +147,27 @@ def search_policy(query: str, academic_program: str = "",
                     evidence_item(chunk_id, text, metadata, "semantic_hit", distance))
                 seen.add(chunk_id)
 
+        # Exact references use actual indexed text, never benchmark answers.
+        reference = re.search(r"\b(table|section)\s+(\d+(?:\.\d+)+)\b", query, re.I)
+        if reference:
+            label, number = reference.groups()
+            pattern = (r"^\s*Table\s+" if label.lower() == "table" else r"^\s*")
+            pattern += re.escape(number) + r"(?![\d.])"
+            indexed = collection.get(where=where, include=["documents", "metadatas"])
+            matches = []
+            for cid, body, meta in zip(indexed["ids"], indexed["documents"], indexed["metadatas"]):
+                if body and re.search(pattern, body, re.I | re.M):
+                    if compatible_program(academic_program, meta.get("program", "")):
+                        matches.append(evidence_item(cid, body, meta, "exact_reference"))
+            if not matches:
+                response.update(status="insufficient_evidence", evidence=[],
+                                message="No applicable indexed passage contains the requested reference.")
+                return response
+            exact_ids = {e["chunk_id"] for e in matches}
+            response["evidence"] = matches[:3] + [
+                e for e in response["evidence"] if e["chunk_id"] not in exact_ids]
+            seen.update(exact_ids)
+
         # Expand only the two strongest hits. Short circulars get all indexed
         # pages; longer documents get the same and adjacent pages.
         seeds = list(response["evidence"][:2])

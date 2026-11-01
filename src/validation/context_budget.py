@@ -20,7 +20,21 @@ def terms(text):
 
 
 def focused_excerpts(evidence, query, max_bytes=9000, max_items=18):
+    # Explicit source references narrow selection, not the underlying corpus.
+    scoped = [e for e in evidence if e.get("retrieval_role") == "exact_reference"]
+    circulars = re.findall(r"\bcircular\s+(\d+)\b", query, re.I)
+    if circulars:
+        named = [e for e in evidence if any(re.search(
+            r"(?:^|_)circular_" + re.escape(n) + r"(?:_|$)", e["document_id"], re.I)
+            for n in circulars)]
+        scoped = named or scoped
+    evidence = scoped or evidence
     catalog = excerpt_catalog(evidence)
+    from .extractive import verify_extractive_claims
+    by_id = {e["chunk_id"]: e for e in evidence}
+    catalog = [item for item in catalog if verify_extractive_claims([{
+        "text": item["text"], "supports": [{"chunk_id": item["chunk_id"], "quote": item["text"]}]
+    }], [by_id[item["chunk_id"]]], query)["supported"]]
     query_terms = terms(query)
     frequency = Counter(token for item in catalog for token in terms(item["text"]))
     def score(item):

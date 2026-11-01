@@ -3,6 +3,7 @@ import re
 
 from .citations import normalized
 from .support import qualifier_errors
+from .passages import is_table_passage
 
 
 def normalized_offsets(text):
@@ -81,6 +82,8 @@ def verify_extractive_claims(claims, evidence, question=""):
                 reason = "Quote is not present in the source."
             elif not current:
                 reason = "The excerpt belongs to the Existing Policy section and describes a historical rule."
+            elif is_table_passage(source["text"], supports[0]["quote"]):
+                reason = None
             elif not quote.endswith((".", "!", "?")):
                 reason = "Copy the complete passage including its final punctuation."
             elif not any(structural_start(source["text"], offsets[p]) for p in current):

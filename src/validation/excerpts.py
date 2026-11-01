@@ -5,6 +5,7 @@ import re
 
 from .citations import normalized
 from .extractive import historical_position, verify_extractive_claims
+from .passages import table_passages
 
 
 def excerpt_catalog(evidence):
@@ -13,9 +14,18 @@ def excerpt_catalog(evidence):
         text = normalized(source["text"])
         # Decimal points and the source's "illness etc. may be permitted"
         # abbreviation must not truncate a condition before its permission clause.
-        for match in re.finditer(r".+?(?:(?<!etc)[.!?](?=\s|$)|$)", text, re.S):
-            start = match.start()
-            segment = match.group()
+        protected = {i for m in re.finditer(
+            r"\b(?:Ph\.D\.|M\.Tech\.|M\.Sc\.|B\.Tech\.|B\.Sc\.|e\.g\.|i\.e\.|etc\.)",
+            text, re.I) for i in range(m.start(), m.end())}
+        boundaries = [m.end() for m in re.finditer(r"[.!?](?=\s|$)", text)
+                      if m.start() not in protected]
+        segments = []
+        previous = 0
+        for end in boundaries + ([len(text)] if not boundaries or boundaries[-1] != len(text) else []):
+            segments.append((previous, text[previous:end]))
+            previous = end
+        for position, segment in segments:
+            start = position
             revised = list(re.finditer(r"\brevised\s+policy\s*:\s*", segment, re.I))
             if revised:
                 start += revised[-1].end()
@@ -23,7 +33,7 @@ def excerpt_catalog(evidence):
             trimmed = re.sub(r"^\s*(?:[>•*-]\s*|\d+[.)]\s*)?", "", segment)
             start += len(segment) - len(trimmed)
             quote = trimmed.strip()
-            if len(quote) < 20 or historical_position(text, start):
+            if len(quote) < 20 or quote[0].islower() or historical_position(text, start):
                 continue
             claim = {"text": quote, "supports": [{
                 "chunk_id": source["chunk_id"], "quote": quote}]}
@@ -36,6 +46,11 @@ def excerpt_catalog(evidence):
                 "document_id": source["document_id"],
                 "page": source["page_start"], "text": quote,
             })
+        for passage in table_passages(source["text"]):
+            key = hashlib.sha256((source["chunk_id"] + "|table|" + passage).encode()).hexdigest()[:16]
+            result.append({"excerpt_id": "s_" + key, "chunk_id": source["chunk_id"],
+                           "document_id": source["document_id"], "page": source["page_start"],
+                           "text": passage})
     return result
 
 
