@@ -13,7 +13,9 @@ def remember(context, name, result):
     trace = list(context.state.get("temp:tool_calls", []))
     trace.append({"tool": name, "lookup_status": result["status"], "result_id": key,
                   "course": result.get("data", {}).get("course", ""),
-                  "semester": result.get("data", {}).get("semester", "")})
+                  "semester": result.get("data", {}).get("semester", ""),
+                  "effective_arguments": dict(context.state.get("temp:effective_arguments", {})),
+                  "output": result.get("data", {})})
     context.state["temp:tool_calls"] = trace
     return {"result_id": key, **result}
 
@@ -43,6 +45,10 @@ def email_draft(course_code: str, semester: str, request_type: str,
                 tool_context: ToolContext, student_name: str = "", roll_number: str = "",
                 start_date: str = "", end_date: str = "", reason: str = "") -> dict:
     """Draft sick_leave or makeup_exam email, using placeholders for missing details."""
+    tool_context.state["temp:effective_arguments"] = {
+        "course_code": course_code, "semester": semester, "request_type": request_type,
+        "student_name": student_name, "roll_number": roll_number,
+        "start_date": start_date, "end_date": end_date, "reason": reason}
     return remember(tool_context, "email_draft", email.generate_email_draft(
         course_code, semester, request_type, student_name, roll_number,
         start_date, end_date, reason,
@@ -112,3 +118,35 @@ def render_result(result_id, stored):
     return {"status": "answer", "answer": answer, "citations": citations,
             "data": data, "tool": name, "lookup_status": status,
             "validation": "deterministic_tool_result"}
+
+
+def select_structured_result(raw, stored, question):
+    """Recover a wrong response schema only for an unambiguous structured intent.
+
+    Explicit unknown result IDs remain rejected; policy or mixed requests never
+    receive this fallback. All rendered fields come from the current-turn store.
+    """
+    import json
+    import re
+    try:
+        payload = json.loads(raw)
+    except (ValueError, TypeError):
+        payload = None
+    if isinstance(payload, dict) and payload.get("status") == "tool_result":
+        return None
+    q = question.lower()
+    if re.search(r"policy|regulation|according to|explain|attendance|credit requirement", q):
+        return None
+    if re.search(r"draft|compose|write.{0,20}email", q):
+        kind = "email_draft"
+    elif re.search(r"instructor|who.{0,15}teach|faculty", q):
+        kind = "instructor"
+    elif re.search(r"offering|list.{0,30}courses", q):
+        kind = "semester_offerings"
+    elif re.search(r"course (?:code|title)", q):
+        kind = "course_lookup"
+    else:
+        return None
+    matches = [key for key, value in stored.items()
+               if value.get("tool") == kind and value.get("status") == "success"]
+    return matches[-1] if len(matches) == 1 else None

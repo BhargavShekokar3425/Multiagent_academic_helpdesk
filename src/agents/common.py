@@ -11,47 +11,11 @@ from ..tools._records import normalized, response
 REQUEST_KEY = "temp:multi_request"
 
 
-def request_details(content, state):
-    text = "".join(p.text or "" for p in ((content.parts or []) if content else []))
-    supplied = {}
-    question = text
-    if text.startswith("Student context: ") and "\nQuestion: " in text:
-        header, question = text.split("\nQuestion: ", 1)
-        try:
-            supplied = json.loads(header[len("Student context: "):])
-        except ValueError:
-            supplied = {}
-        if not isinstance(supplied, dict):
-            supplied = {}
-    semester = state.get("requested_semester") or supplied.get("semester", "")
-    semester = semester if isinstance(semester, str) else ""
-    if not semester:
-        matches = re.findall(r"\b(\d{4})[-–](\d{2}|\d{4})-S([12])\b", question, re.I)
-        if not matches:
-            matches = [(year, end, "2" if term.upper() in {"II", "2"} else "1")
-                       for year, end, term in re.findall(
-                           r"\b(\d{4})[-–](\d{2}|\d{4})\s+(?:semester|sem)\s*(II|I|2|1)\b",
-                           question, re.I)]
-        values = {f"{year}-{end}-S{term}" for year, end, term in matches}
-        semester = next(iter(values)) if len(values) == 1 else ""
-    codes = set(re.findall(r"\b[A-Z]{2,5}\d{3,4}\b", question, re.I))
-    course_code = next(iter(codes)).upper() if len(codes) == 1 else ""
-    lower = question.lower()
-    if re.search(r"make[ -]?up|missed.{0,60}(?:exam|examination)", lower):
-        email_type = "makeup_exam"
-    elif re.search(r"sick|illness|\bleave\b", lower):
-        email_type = "sick_leave"
-    else:
-        email_type = ""
-    program = supplied.get("academic_program", "")
-    year = supplied.get("admission_year", 0)
-    return {"question": question, "semester": semester, "course_code": course_code,
-            "program": program if isinstance(program, str) else "",
-            "admission_year": year if type(year) is int and year >= 0 else 0,
-            "email_type": email_type}
+from ..request_context import request_details, user_facts
 
 
 def _start(callback_context, role):
+    callback_context.state["temp:active_role"] = role
     request = callback_context.state.get(REQUEST_KEY)
     if not isinstance(request, dict):
         request = request_details(callback_context.user_content, callback_context.state)
@@ -69,11 +33,11 @@ def _start(callback_context, role):
                   "citations": [], "validation": "abstained"}
         callback_context.state[RESULT_KEY] = result
         return types.Content(role="model", parts=[types.Part(text=result["answer"])])
-    if role == "email" and not request["semester"]:
+    if role == "email" and (request["course_code"] or not request["semester"]):
         # An explicitly generic draft is useful even before the student supplies
         # a course/semester; there is no instructor lookup across unknown semesters.
         selected = email_draft(request["course_code"], request["semester"],
-                               request["email_type"], callback_context)
+                               request["email_type"], callback_context, **user_facts(request["question"]))
         result = render_result(selected["result_id"], callback_context.state[KEY])
         callback_context.state[RESULT_KEY] = result
         return types.Content(role="model", parts=[types.Part(text=result["answer"])])
@@ -101,6 +65,9 @@ def guard_tool_arguments(tool, args, tool_context):
     request = tool_context.state.get(REQUEST_KEY, {})
     question = request.get("question", "")
     name = tool.name
+    supplied = dict(args)
+    tool_context.state["temp:argument_trace"] = list(tool_context.state.get("temp:argument_trace", [])) + [
+        {"tool": name, "supplied": supplied, "user_context": dict(request)}]
     if name == "retrieve_policy":
         args["academic_program"] = request.get("program", "")
         args["admission_year"] = request.get("admission_year", 0)
@@ -135,11 +102,18 @@ def guard_tool_arguments(tool, args, tool_context):
                 return remember(tool_context, name, response(
                     "ambiguous", message="Please specify or resolve the course code first."))
             args["course_code"] = ""
+    if name == "semester_offerings":
+        args["department"] = "" if not re.search(r"(?:department|departmental)\s+(?:of\s+)?", question, re.I) else args.get("department", "")
     if name == "email_draft":
         args["request_type"] = request.get("email_type", "")
         for field in ("student_name", "roll_number", "start_date", "end_date", "reason"):
             if not mentioned(args.get(field, ""), question):
                 args[field] = ""
+    tool_context.state["temp:effective_arguments"] = dict(args)
+    trace = list(tool_context.state.get("temp:argument_trace", []))
+    if trace:
+        trace[-1]["effective"] = dict(args)
+        tool_context.state["temp:argument_trace"] = trace
     return None
 
 
@@ -151,3 +125,23 @@ def trace_policy_tool(tool, args, tool_context, tool_response):
                       "academic_program": args.get("academic_program", ""),
                       "admission_year": args.get("admission_year", 0)})
         tool_context.state["temp:tool_calls"] = trace
+
+
+def project_specialist_task(callback_context, llm_request):
+    """Project only the user task, preserving tool evidence and original fact guards."""
+    request = callback_context.state.get(REQUEST_KEY, {})
+    if len(request.get("agents", [])) <= 1 or callback_context.state.get("temp:active_role") != "policy":
+        return None
+    question = re.split(r"\b(?:and|then|also)\s+(?:draft|write|compose|prepare)\b",
+                        request["question"], maxsplit=1, flags=re.I)[0].strip(" .,")
+    contents = []
+    for content in llm_request.contents:
+        cloned = content.model_copy(deep=True)
+        if cloned.role == "user":
+            for part in cloned.parts or []:
+                if part.text and "Student context:" in part.text and "\nQuestion:" in part.text:
+                    header = part.text.split("\nQuestion:", 1)[0]
+                    part.text = header + "\nQuestion: " + question
+        contents.append(cloned)
+    llm_request.contents = contents
+    return None

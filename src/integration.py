@@ -24,7 +24,7 @@ def unanswered_logging_scope(reuse_existing=False):
 def obvious_out_of_scope(question):
     """Narrow known refusal cases; not a complete semantic scope classifier."""
     return bool(re.search(
-        r"\bdining options\b|\brestaurants? (?:on|near) campus\b|"
+        r"\bstocks?\b|\bweather\b|\bdining options\b|\brestaurants? (?:on|near) campus\b|"
         r"\b(?:reach|travel to|get to) (?:the )?campus from\b", question, re.I))
 
 

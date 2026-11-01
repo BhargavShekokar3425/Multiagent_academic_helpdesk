@@ -24,9 +24,10 @@ from .validation.excerpts import excerpt_catalog, resolve_excerpt_selection
 from .validation.context_budget import focused_excerpts
 from .tools.agent_tools import (
     KEY as STRUCTURED_KEY, course_slot, courses_in_slot, elective_count,
-    instructor, email_draft, render_result)
+    instructor, email_draft, render_result, course_lookup, semester_offerings, select_structured_result)
 from .integration import obvious_out_of_scope, record_unanswered, unanswered_logging_scope
 from .tools.routing import parse_slot_question
+from .request_context import request_details, intent, user_facts, unavailable_reason
 
 EVIDENCE_KEY = "temp:policy_evidence"
 RESULT_KEY = "policy_result"
@@ -52,6 +53,7 @@ INSTRUCTION = """
 You are IIT Jodhpur's academic helpdesk for policy, curriculum, course schedules,
 elective counts, instructor lookups and sick-leave/makeup-exam email drafts.
 Refuse dining, transport and other nonacademic requests without guessing.
+Use course_lookup for title/code identity and semester_offerings for recorded offering lists.
 Use course_slot for course slots, courses_in_slot for listing slot meetings,
 elective_count for counts, instructor for course contacts, and email_draft for drafts.
 Python computes counts; never count rows yourself.
@@ -113,6 +115,13 @@ If unable to answer, return one of:
 
 
 def reset_turn(callback_context: CallbackContext, *, route_slots=True):
+    request = request_details(getattr(callback_context, "user_content", None), callback_context.state)
+    if "agents" in callback_context.state.get("temp:multi_request", {}):
+        request = callback_context.state["temp:multi_request"]
+    callback_context.state["temp:multi_request"] = request
+    callback_context.state["temp:last_model_output"] = None
+    callback_context.state["temp:argument_trace"] = []
+    callback_context.state["temp:pending_draft"] = None
     callback_context.state[EVIDENCE_KEY] = {}
     callback_context.state[RESULT_KEY] = None
     callback_context.state[REVISION_KEY] = False
@@ -130,6 +139,40 @@ def reset_turn(callback_context: CallbackContext, *, route_slots=True):
         result["_tool_calls"] = callback_context.state.get("temp:tool_calls", [])
         callback_context.state[RESULT_KEY] = result
         return types.Content(role="model", parts=[types.Part(text=result["answer"])])
+    unavailable = unavailable_reason(request)
+    if unavailable:
+        result = {"status": "insufficient_evidence", "answer": unavailable,
+                  "reason": unavailable, "citations": [], "validation": "academic_applicability_abstention"}
+        record_unanswered(callback_context, result, request["question"])
+        callback_context.state[RESULT_KEY] = result
+        return types.Content(role="model", parts=[types.Part(text=result["answer"])])
+    request_intent = intent(request["question"])
+    if request_intent["email"] and not request_intent["policy"] and (
+            request["course_code"] or not request["semester"]):
+        callback_context.state["temp:allow_email_placeholders"] = True
+        chosen = email_draft(request["course_code"], request["semester"], request["email_type"],
+                             callback_context, **user_facts(request["question"]))
+        result = render_result(chosen["result_id"], callback_context.state[STRUCTURED_KEY])
+        callback_context.state[RESULT_KEY] = result
+        return types.Content(role="model", parts=[types.Part(text=result["answer"])])
+    if not request_intent["policy"] and not request_intent["email"]:
+        import re
+        title = re.search(r"course (?:code|title) (?:for|of) (.+?)[?.]?$", request["question"], re.I)
+        recorded = re.search(r"(?:recorded.*offerings|list.*courses offered)", request["question"], re.I)
+        if title or recorded:
+            chosen = (course_lookup(title.group(1).strip().rstrip("?."), request["semester"], callback_context)
+                      if title else semester_offerings(request["semester"], callback_context))
+            result = render_result(chosen["result_id"], callback_context.state[STRUCTURED_KEY])
+            record_unanswered(callback_context, result, request["question"])
+            callback_context.state[RESULT_KEY] = result
+            return types.Content(role="model", parts=[types.Part(text=result["answer"])])
+    if request_intent["mixed"] and "agents" not in request:
+        callback_context.state["temp:allow_email_placeholders"] = True
+        chosen = email_draft(request["course_code"], request["semester"], request["email_type"],
+                             callback_context, **user_facts(request["question"]))
+        callback_context.state["temp:pending_draft"] = render_result(
+            chosen["result_id"], callback_context.state[STRUCTURED_KEY])
+
     # Route direct slot questions before the LLM can substitute a policy lookup.
     # CLI context is separate from the student's actual question.
     actual_question = question.split("\nQuestion: ", 1)[-1]
@@ -187,6 +230,7 @@ async def validate_final(callback_context: CallbackContext, llm_response: LlmRes
     # Missing final content follows the same validation/revision path as other
     # malformed output; tool-call responses still pass through unchanged.
     raw = "".join(part.text or "" for part in parts if not part.thought)
+    callback_context.state["temp:last_model_output"] = raw
     evidence = list(callback_context.state.get(EVIDENCE_KEY, {}).values())
     user_content = getattr(callback_context, "user_content", None)
     question = "".join(part.text or "" for part in (user_content.parts or [])) if user_content else ""
@@ -194,6 +238,9 @@ async def validate_final(callback_context: CallbackContext, llm_response: LlmRes
         selected = json.loads(raw)
     except ValueError:
         selected = None
+    recovered = select_structured_result(raw, callback_context.state.get(STRUCTURED_KEY, {}), question)
+    if recovered:
+        selected = {"status": "tool_result", "result_id": recovered}
     if isinstance(selected, dict) and selected.get("status") == "tool_result":
         result_id = selected.get("result_id")
         if not isinstance(result_id, str):
@@ -326,8 +373,21 @@ async def validate_final(callback_context: CallbackContext, llm_response: LlmRes
     checked.pop("claims", None)
     if checked.get("status") == "answer":
         checked["claims"] = checked.pop("claim_evidence", [])
+    draft = callback_context.state.get("temp:pending_draft")
+    if draft and intent(question)["mixed"]:
+        policy = dict(checked)
+        success = checked.get("status") == "answer" and draft.get("status") == "answer"
+        checked = {"status": "answer" if success else "partial_answer",
+                   "answer": "Policy:\n" + policy["answer"] + "\n\nEmail:\n" + draft["answer"],
+                   "sections": [{"agent": "single_policy", **policy}, {"agent": "single_email", **draft}],
+                   "citations": policy.get("citations", []) + draft.get("citations", []),
+                   "warnings": policy.get("warnings", []),
+                   "validation": "validated_policy_and_structured_results"}
     record_unanswered(callback_context, checked, question)
     checked["_tool_calls"] = callback_context.state.get("temp:tool_calls", [])
+    checked["_debug"] = {**checked.get("_debug", {}),
+                         "argument_trace": callback_context.state.get("temp:argument_trace", []),
+                         "raw_final_output": raw}
     callback_context.state[RESULT_KEY] = checked
     text = checked["answer"]
     for warning in checked.get("warnings", []):
@@ -336,12 +396,17 @@ async def validate_final(callback_context: CallbackContext, llm_response: LlmRes
         role="model", parts=[types.Part(text=text)]))
 
 
+def guard_baseline_tool(tool, args, tool_context):
+    from .agents.common import guard_tool_arguments
+    return guard_tool_arguments(tool, args, tool_context)
+
+
 def build_agent(extractive=False):
     return Agent(
         name="academic_helpdesk_baseline",
         description="Academic helpdesk with RAG, CSV lookups and editable email drafts.",
-        model=build_llm(), instruction=INSTRUCTION + (EXTRACTIVE_INSTRUCTION if extractive else ""), tools=[retrieve_policy, course_slot, courses_in_slot, elective_count, instructor, email_draft],
-        before_agent_callback=reset_turn, after_model_callback=validate_final,
+        model=build_llm(), instruction=INSTRUCTION + (EXTRACTIVE_INSTRUCTION if extractive else ""), tools=[retrieve_policy, course_slot, courses_in_slot, elective_count, instructor, email_draft, course_lookup, semester_offerings],
+        before_agent_callback=reset_turn, before_tool_callback=guard_baseline_tool, after_model_callback=validate_final,
     )
 
 

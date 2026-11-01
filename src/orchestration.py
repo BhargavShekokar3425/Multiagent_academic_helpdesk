@@ -39,7 +39,7 @@ def route_request(question):
     if email:
         # A draft uses its own verified instructor lookup. A mention of the
         # instructor in a draft request does not create a second schedule task.
-        schedule = bool(re.search(r"\bslot\b|timetable|offering|course code|how many", q))
+        schedule = bool(re.search(r"\bslot\b|timetable|offering|how many", q))
     plan = []
     if policy or (not email and not schedule and re.search(
             r"academic|exam|examination|course|semester|leave|thesis|admission", q)):
@@ -61,6 +61,8 @@ def validate_handoff(role, result, evidence, stored, question):
     """Reconstruct answers from validated claims or server-owned tool results."""
     if not isinstance(result, dict):
         return rejected()
+    if result.get("validation") == "academic_applicability_abstention":
+        return result
     if result.get("validation") == "deterministic_tool_result":
         allowed = ({"email_draft"} if role == "email"
                    else {"course_slot", "courses_in_slot", "elective_count",
@@ -130,7 +132,21 @@ class HelpdeskOrchestrator(BaseAgent):
                 callback.state[KEY] = {}
                 yield Event(author=self.name, actions=callback.actions)
                 try:
-                    async for event in child.run_async(ctx):
+                    child_ctx = ctx
+                    if len(plan) > 1:
+                        if role == "policy":
+                            task = re.split(r"\b(?:and|then|also)\s+(?:draft|write|compose|prepare)\b",
+                                            request["question"], maxsplit=1, flags=re.I)[0].strip(" .,")
+                        else:
+                            task = request["question"]
+                        # Original facts remain in REQUEST_KEY; only the model task
+                        # is narrowed so policy evidence need not substantiate an email.
+                        header = json.dumps({"academic_program": request["program"],
+                                             "admission_year": request["admission_year"],
+                                             "semester": request["semester"]})
+                        child_ctx = ctx.model_copy(update={"user_content": types.Content(role="user", parts=[
+                            types.Part(text="Student context: " + header + "\nQuestion: " + task)])})
+                    async for event in child.run_async(child_ctx):
                         # Keep the function-call/response history and state deltas;
                         # only the coordinator emits the user-facing final text.
                         filtered = event.model_copy(deep=True)
@@ -153,7 +169,11 @@ class HelpdeskOrchestrator(BaseAgent):
                 callback = CallbackContext(ctx)
                 calls.append({"agent": child.name, "status": result["status"]})
                 traces.extend(deepcopy(callback.state.get("temp:tool_calls", [])))
-                diagnostics.append({"agent": child.name, "details": result.get("_debug")})
+                diagnostics.append({"agent": child.name, "details": result.get("_debug"),
+                                    "arguments": deepcopy(callback.state.get("temp:argument_trace", [])),
+                                    "handoff_validation": result.get("validation"),
+                                    "result_type": result.get("status"),
+                                    "raw_final_output": callback.state.get("temp:last_model_output")})
                 sections.append({"agent": child.name, **{
                     k: v for k, v in result.items() if not k.startswith("_")}})
             if not plan:
@@ -165,6 +185,7 @@ class HelpdeskOrchestrator(BaseAgent):
                 status = ("answer" if successes == len(sections) else "partial_answer" if successes
                           else "error" if any(s["status"] == "error" for s in sections)
                           else "requires_clarification" if any(s["status"] == "requires_clarification" for s in sections)
+                          else "out_of_scope" if all(s["status"] == "out_of_scope" for s in sections)
                           else "insufficient_evidence")
                 answer = "\n\n".join(
                     ((s["agent"].replace("_agent", "").capitalize() + ":\n") if len(sections) > 1 else "")
