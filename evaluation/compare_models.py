@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import uuid
+import time
 
 from .evaluate import available_models, ollama_request, write_json
 from .scoring import ROOT, metrics, file_hash
@@ -42,7 +43,7 @@ def unload_competitors(target):
 
 
 def compare(output_dir=None, repetitions=1, ids=None, timeout=180, answer_mode="extractive",
-            inventory=None, execute=None, unload=None):
+            inventory=None, execute=None, unload=None, warmup=False):
     if repetitions < 1 or timeout <= 0:
         raise ValueError("Repetitions and timeout must be positive.")
     inventory = available_models() if inventory is None else inventory
@@ -69,7 +70,17 @@ def compare(output_dir=None, repetitions=1, ids=None, timeout=180, answer_mode="
                        "--timeout", str(timeout), "--answer-mode", answer_mode, "--output-dir", str(target.resolve())]
             if ids:
                 command += ["--ids", ",".join(ids)]
-            entry = {"model": model, "mode": mode, "command": command, "unloaded_models": unloaded}
+            warmup_record = None
+            if warmup:
+                resident = any(m["name"] == model for m in ollama_request("/api/ps").get("models", []))
+                started = time.perf_counter()
+                response = ollama_request("/api/generate", {
+                    "model": model, "prompt": "Reply with OK.", "stream": False,
+                    "options": {"temperature": 0, "num_ctx": 8192, "num_predict": 8}}, timeout=180)
+                warmup_record = {"performed": True, "cold_before_warmup": not resident,
+                                 "elapsed_seconds": time.perf_counter() - started,
+                                 "load_duration_ns": response.get("load_duration")}
+            entry = {"warmup": warmup_record, "model": model, "mode": mode, "command": command, "unloaded_models": unloaded}
             try:
                 # A finished subprocess isolates model configuration and ensures
                 # no other architecture/model run executes concurrently.
@@ -147,6 +158,7 @@ def main(argv=None):
     operation = parser.add_mutually_exclusive_group()
     operation.add_argument("--check", action="store_true", help="Check installation only; no inference or downloads.")
     operation.add_argument("--summarize", type=Path, help="Recompute an existing comparison after manual grading.")
+    parser.add_argument("--warmup", action="store_true", help="Warm each configuration identically; exclude warmup timing from benchmark latency.")
     parser.add_argument("--repetitions", type=int, default=1)
     parser.add_argument("--ids")
     parser.add_argument("--timeout", type=float, default=180)
@@ -163,7 +175,7 @@ def main(argv=None):
             print(json.dumps(prerequisites(), indent=2))
             return 0
         report = compare(args.output_dir, args.repetitions, args.ids.split(",") if args.ids else None,
-                         args.timeout, args.answer_mode)
+                         args.timeout, args.answer_mode, warmup=args.warmup)
         print(json.dumps({"output_dir": report["output_dir"],
                           "configurations": [{"model": c["model"], "mode": c["mode"], "status": c["status"]}
                                              for c in report["configurations"]],

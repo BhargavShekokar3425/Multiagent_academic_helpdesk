@@ -1,5 +1,6 @@
 """Evidence-based scoring. Similarity and model self-review are never ground truth."""
 import hashlib
+import csv
 import itertools
 import json
 import math
@@ -79,6 +80,12 @@ def policy_claims(result):
 def check_citation(citation, sources, semester=""):
     source = sources.get(citation.get("document_id"))
     if not source:
+        manifest = ROOT / "data/document_manifest.csv"
+        if manifest.exists():
+            with manifest.open(encoding="utf-8-sig", newline="") as stream:
+                known = {r["document_id"] for r in csv.DictReader(stream)}
+            if citation.get("document_id") in known:
+                return {"score": None, "reason": "Known corpus source; quote/page not independently reviewed in this benchmark catalog."}
         return {"score": 0, "reason": "Unknown source identity."}
     if citation.get("source_url") and citation["source_url"] != source["source_url"]:
         return {"score": 0, "reason": "Source URL mismatch."}
@@ -206,7 +213,21 @@ def grade_response(question, gt, result, sources, tool_calls, mode):
     routing = int(agents == expected_agents) if mode == "multi" else None
     names = {t.get("tool") for t in tool_calls}
     expected_tools = set(gt["expected_route"]["tools"])
+    content = accuracy
+    if eligible and gt["grading"] == "structured" and status in {"answer", "partial_answer"}:
+        if deterministic and all(v["score"] == 1 for v in deterministic) and not coverage["missing"]:
+            if not any(c["score"] == 0 for c in citation_checks):
+                if gt.get("checks", {}).get("tool") != "email_draft":
+                    content = 1
+                else:
+                    section = next((s for s in leaves(result) if s.get("tool") == "email_draft"), {})
+                    body = normalized(section.get("data", {}).get("body", ""))
+                    content = 1 if body in [normalized(x) for x in gt.get("acceptable_email_bodies", [])] else None
     return {
+        "content_accuracy": content,
+        "outer_status_correct": int(status in gt["expected_statuses"]),
+        "citation_relevance": None if citations else None,
+        "applicability_review": "manual" if question["category"] == "policy" else "semester/source contract",
         "accuracy": accuracy, "accuracy_eligible": eligible, "accuracy_method": method,
         "expected_behavior_correct": int(expected), "citation_checks": citation_checks,
         "required_source_coverage": coverage, "claims": claims,
@@ -230,8 +251,9 @@ def ratio(values, eligible=None):
 def extract_values(result):
     return {
         "numeric_units": sorted(set(re.findall(
-            r"\b\d+(?:\.\d+)?\s*(?:%|hours?|days?|weeks?|credits?)",
+            r"\b\d+(?:\.\d+)?\s*(?:%|hours?|minutes?|days?|weeks?|credits?)",
             result.get("answer", ""), re.I))),
+        "dates": sorted(set(re.findall(r"\b\d{4}-\d{2}-\d{2}\b", result.get("answer", "")))),
         "structured": [{"tool": s.get("tool"), "data": s.get("data", {})}
                        for s in leaves(result) if s.get("tool")],
     }
@@ -257,6 +279,10 @@ def stability(records):
                 r["grading"]["accuracy"] if r["grading"]["accuracy_eligible"]
                 else r["grading"]["expected_behavior_correct"] for r in runs],
             "status": [r["result"].get("status") for r in runs],
+            "tool_arguments": [r["result"].get("debug", {}).get("argument_trace",
+                    r["result"].get("debug", {}).get("specialist_diagnostics", [])) for r in runs],
+            "tool_outputs": [r.get("observations", {}).get("tool_results", []) for r in runs],
+            "normalized_answer": [normalized(r["result"].get("answer", "")) for r in runs],
         }
         fields = {}
         for field, values in snapshots.items():
@@ -270,7 +296,11 @@ def stability(records):
         output.append({"model": model, "mode": mode, "question_id": qid,
                        "repetitions": len(runs), "measured": True,
                        "successful_repetitions": sum(r["result"].get("status") in {"answer", "partial_answer"} for r in runs),
-                       "inconsistent": any(v["all_equal"] is False for v in fields.values()), "fields": fields})
+                       "inconsistent": any(v["all_equal"] is False for v in fields.values()),
+                       "material_change": any(fields[k]["all_equal"] is False for k in
+                           ("factual_values", "tool_outputs", "status", "correctness")),
+                       "formatting_only": fields["answer"]["all_equal"] is False and fields["normalized_answer"]["all_equal"] is True,
+                       "fields": fields})
     return output
 
 
@@ -286,6 +316,12 @@ def metrics(records):
                if r["verification_status"] in {"pending_source", "expected_clarification"}]
     return {
         "records": len(records), "answer_accuracy": ratio(accuracy),
+        "content_accuracy": ratio(r["grading"].get("content_accuracy", r["grading"]["accuracy"])
+                                  for r in records if r["grading"]["accuracy_eligible"]),
+        "outer_status_correctness": ratio(r["grading"].get("outer_status_correct",
+                      r["grading"]["expected_behavior_correct"]) for r in records),
+        "strict_task_completion": ratio(r["grading"]["accuracy"]
+                                       for r in records if r["grading"]["accuracy_eligible"]),
         "citation_correctness": ratio(citation_values), "claim_groundedness": ratio(claim_values),
         "out_of_scope_refusal": ratio(refusals), "unsupported_abstention": ratio(abstentions),
         "missing_data_behavior": ratio(missing),

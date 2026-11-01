@@ -291,6 +291,8 @@ def apply_manual_grades(records, grades, run_id):
             if not grade["accuracy_eligible"] or grade["accuracy"] is not None:
                 raise ValueError("Only pending eligible accuracy may be manually graded.")
             grade["accuracy"] = value
+            if grade.get("content_accuracy") is None:
+                grade["content_accuracy"] = value
             grade["accuracy_method"] = "independent_manual_review"
         for key, target in (("claims", "claims"), ("citations", "citation_checks")):
             allowed = {v["index"]: v for v in grade[target]}
